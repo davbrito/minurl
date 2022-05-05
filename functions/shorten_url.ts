@@ -1,4 +1,4 @@
-const EXPIRATION_TIME_SEC = 60;
+const EXPIRATION_TIME_SEC = 10000;
 
 export const onRequest: PagesFunction<Env> = async (context) => {
   // Contents of context object
