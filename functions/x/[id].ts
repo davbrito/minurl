@@ -1,5 +1,5 @@
 export const onRequest: PagesFunction<Env> = async (context) => {
-  const { request, env, params, waitUntil, next, data } = context;
+  const { env, params } = context;
 
   const id = params.id as string;
 
@@ -13,19 +13,10 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   if (fullUrl === null) {
     return new Response(
-      JSON.stringify({
-        params,
-        error: "Invalid request. Please provide a valid id in the url.",
-      }),
+      JSON.stringify("Invalid request. Please provide a valid id in the url."),
       { status: 400 }
     );
   }
 
-  return new Response(
-    JSON.stringify({
-      params,
-      url: fullUrl,
-    }),
-    { status: 200 }
-  );
+  return Response.redirect(fullUrl, 301);
 };
