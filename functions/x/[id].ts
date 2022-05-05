@@ -13,7 +13,10 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   if (fullUrl === null) {
     return new Response(
-      "Invalid request. Please provide a valid id in the url.",
+      JSON.stringify({
+        params,
+        error: "Invalid request. Please provide a valid id in the url.",
+      }),
       { status: 400 }
     );
   }
