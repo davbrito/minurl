@@ -21,5 +21,11 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     );
   }
 
-  return Response.redirect(fullUrl, 301);
+  return new Response(
+    JSON.stringify({
+      params,
+      url: fullUrl,
+    }),
+    { status: 200 }
+  );
 };
