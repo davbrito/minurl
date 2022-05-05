@@ -1,0 +1,9 @@
+{
+  "files": ["./index.js"],
+  "compilerOptions": {
+    "lib": ["ES2021"],
+    "types": ["node"],
+    "noEmit": true,
+    "allowJs": true
+  }
+}

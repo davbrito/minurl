@@ -1,0 +1,41 @@
+{
+  "name": "minurl",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "module": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davbrito/minurl.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davbrito/minurl/issues"
+  },
+  "homepage": "https://github.com/davbrito/minurl#readme",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.9.0",
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.177",
+    "@types/node": "^17.0.31",
+    "@types/react": "^18.0.8",
+    "@types/react-dom": "^18.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "eslint": "^8.14.0",
+    "eslint-plugin-react": "^7.29.4",
+    "prettier": "^2.6.2",
+    "prettier-plugin-jsdoc": "^0.3.38"
+  },
+  "dependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "wrangler": "^0.0.0-62680f6"
+  }
+}
