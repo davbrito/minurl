@@ -1,5 +1,3 @@
-import { Env } from "../env";
-
 export const onRequest: PagesFunction<Env> = async (context) => {
   const { request, env, params, waitUntil, next, data } = context;
 
@@ -11,7 +9,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     });
   }
 
-  const fullUrl = await MinifiedUrls.get(id);
+  const fullUrl = await env.MinifiedUrls.get(id);
 
   if (fullUrl === null) {
     return new Response(

@@ -1,7 +1,3 @@
-export interface Env {
+interface Env {
   MinifiedUrls: KVNamespace;
-}
-
-declare global {
-  const MinifiedUrls: KVNamespace;
 }

@@ -1,5 +1,3 @@
-import { Env } from "./env";
-
 const EXPIRATION_TIME_SEC = 60;
 
 export const onRequest: PagesFunction<Env> = async (context) => {
@@ -37,7 +35,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     );
   }
 
-  const id = await storeUrl(MinifiedUrls, urlToShorten);
+  const id = await storeUrl(env.MinifiedUrls, urlToShorten);
 
   const response = JSON.stringify({ url: `/x/${id}` });
 
