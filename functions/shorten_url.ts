@@ -1,6 +1,6 @@
 const EXPIRATION_TIME_SEC = 10000;
 
-export const onRequest: PagesFunction<Env> = async (context) => {
+export const onRequestPost: PagesFunction<Env> = async (context) => {
   // Contents of context object
   const {
     request, // same as existing Worker API
@@ -13,16 +13,19 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   const url = new URL(request.url);
 
-  if (!url.searchParams.has("url")) {
+  const formData = await request.formData();
+
+  if (!url.searchParams.has("url") && !formData.has("url")) {
     return new Response(
       JSON.stringify({
-        error: "No url parameter provided",
+        error: "No url provided",
       }),
       { status: 400 }
     );
   }
 
-  const urlToShorten = url.searchParams.get("url");
+  const urlToShorten =
+    url.searchParams.get("url") ?? (formData.get("url") as string);
 
   try {
     new URL(urlToShorten);
@@ -37,7 +40,16 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   const id = await storeUrl(env.MinifiedUrls, urlToShorten);
 
-  const response = JSON.stringify({ url: `/x/${id}` });
+  const minifiedUrl = `/x/${id}`;
+
+  if (url.searchParams.has("redirect")) {
+    const redirectUrl = new URL(url.searchParams.get("redirect"));
+    redirectUrl.searchParams.set("minified_url", minifiedUrl);
+    redirectUrl.searchParams.set("url", urlToShorten);
+    return Response.redirect(redirectUrl.toString(), 301);
+  }
+
+  const response = JSON.stringify({ url: minifiedUrl });
 
   return new Response(response);
 };

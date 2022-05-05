@@ -1,0 +1,8 @@
+{
+  "/shorten_url": {
+    "target": "http://localhost:8788/"
+  },
+  "/x": {
+    "target": "http://localhost:8788/"
+  }
+}
