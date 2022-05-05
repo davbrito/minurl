@@ -1,8 +1,7 @@
 {
-  "files": ["./index.js"],
+  "files": ["./src/index.tsx"],
   "compilerOptions": {
-    "lib": ["ES2021"],
-    "types": ["node"],
+    "lib": ["ES2021", "DOM"],
     "noEmit": true,
     "allowJs": true
   }
