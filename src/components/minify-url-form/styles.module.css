@@ -1,0 +1,43 @@
+.root {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--accent-color);
+  margin-inline: 3rem;
+  margin-block: auto;
+  align-self: center;
+  width: fit-content;
+}
+
+.label {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.input {
+  appearance: none;
+  border: 1px solid hsl(270deg 50% 40% / 0.1);
+  background-color: hsl(270deg 50% 40% / 0.2);
+  font-size: 2rem;
+  padding: 0.5rem;
+  outline: none;
+  border-radius: 0.3rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px hsl(270deg 50% 40% / 0.1);
+}
+
+.input::placeholder {
+  color: var(--color-secondary-transparent);
+}
+
+.button {
+  margin-block-start: 1rem;
+  font-size: 1.6rem;
+}

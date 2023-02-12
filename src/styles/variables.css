@@ -1,0 +1,7 @@
+:root {
+  --color-primary: hsl(270deg 50% 40%);
+  --color-secondary: hsl(249deg 43% 21%);
+  --color-primary-transparent: hsl(270deg 50% 40% / 0.5);
+  --color-secondary-transparent: hsl(249deg 43% 21% / 0.5);
+  --accent-color: var(--color-primary);
+}
