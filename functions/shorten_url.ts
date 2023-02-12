@@ -1,3 +1,5 @@
+import { nanoid } from "nanoid";
+
 const EXPIRATION_TIME_SEC = 10000;
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
@@ -61,7 +63,7 @@ async function storeUrl(kv: KVNamespace, url: string) {
     return id;
   }
 
-  id = crypto.randomUUID();
+  id = nanoid();
 
   await Promise.all([
     kv.put(id, url, {
