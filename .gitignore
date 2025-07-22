@@ -108,4 +108,5 @@ dist
 .mf/
 
 
-.vscode/
+.vscode/*
+!.vscode/extensions.json
