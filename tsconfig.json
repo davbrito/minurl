@@ -1,10 +1,17 @@
 {
-  "files": ["./src/index.tsx", "./src/env.d.ts"],
-  "include": ["./src/components/**/*", "./src/hooks/**/*"],
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.worker.json"
+    }
+  ],
   "compilerOptions": {
-    "lib": ["ES2021", "DOM"],
-    "noEmit": true,
-    "allowJs": true,
-    "jsx": "react-jsx"
+    "types": ["./worker-configuration.d.ts"]
   }
 }

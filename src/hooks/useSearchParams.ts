@@ -1,10 +1,9 @@
-import { useDebugValue } from "react";
-import { useLocation } from "wouter";
+import { useDebugValue, useMemo } from "react";
+import { useSearch } from "wouter";
 
 export default function useSearchParams() {
-  useLocation();
-  const url = new URL(window.location.href);
-  const { searchParams } = url;
+  const search = useSearch();
+  const searchParams = useMemo(() => new URLSearchParams(search), [search]);
   useDebugValue(searchParams);
   return searchParams;
 }

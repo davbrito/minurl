@@ -1,8 +1,9 @@
 {
-    "recommendations": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "github.copilot",
-        "bradlc.vscode-tailwindcss"
-    ]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "github.copilot",
+    "bradlc.vscode-tailwindcss",
+    "nicoespeon.abracadabra"
+  ]
 }

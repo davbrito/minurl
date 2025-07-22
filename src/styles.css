@@ -1,3 +1,28 @@
-@import url(./styles/variables.css);
-@import url(./styles/reset.css);
-@import url(./styles/buttons.css);
+@import "@fontsource-variable/roboto-flex";
+@import "tailwindcss";
+@import "./styles/variables.css";
+@import "./styles/buttons.css";
+
+@theme {
+  --color-primary: hsl(270deg 50% 40%);
+  --color-secondary: hsl(249deg 43% 21%);
+  --color-primary-transparent: hsl(270deg 50% 40% / 0.5);
+  --color-secondary-transparent: hsl(249deg 43% 21% / 0.5);
+  --color-accent: var(--color-primary);
+  --default-font-family: "Roboto Flex Variable", var(--font-sans);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  color: var(--color-secondary);
+  background-color: hsl(258, 23%, 80%);
+}
+
+:where(button, [role="button"]) {
+  cursor: pointer;
+}
