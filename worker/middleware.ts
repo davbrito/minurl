@@ -6,11 +6,11 @@ const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: true,
   sameSite: "Strict",
-  maxAge: 60 * 60 * 24 * 30,
+  maxAge: 60 * 60 * 24 * 30
 } as const;
 
 export function apiKeyAuth({
-  soft = false,
+  soft = false
 } = {}): MiddlewareHandler<ServerEnv> {
   return async (c, next) => {
     const apiKeyCookie = getCookie(c, "ak");
@@ -24,6 +24,7 @@ export function apiKeyAuth({
     if (!apiKey || apiKey !== c.env.SECRET_KEY) {
       if (apiKeyCookie) {
         // If the cookie exists but the key is invalid, delete it
+        console.log("[auth] deleting invalid key cookie");
         deleteCookie(c, "ak");
       }
       c.set("isAuthenticated", false);
@@ -33,6 +34,7 @@ export function apiKeyAuth({
     } else {
       // If the API key is valid, set it in the cookie
       if (!apiKeyCookie) {
+        console.log("[auth] setting key cookie");
         setCookie(c, "ak", apiKey, COOKIE_OPTIONS);
       }
 
