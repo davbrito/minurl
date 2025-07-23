@@ -6,14 +6,14 @@
   "assets": {
     "directory": "./dist/client",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/x/*", "/rpc/*"],
+    "run_worker_first": ["/x/*", "/rpc/*"]
   },
   "kv_namespaces": [
     {
       "binding": "MinifiedUrls",
-      "id": "3792666bc49d458a934a05e93812de9b",
-    },
-  ],
+      "id": "3792666bc49d458a934a05e93812de9b"
+    }
+  ]
   /**
    * Smart Placement
    * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
