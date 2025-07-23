@@ -1,8 +1,9 @@
 import type { Context } from "hono";
 import type { ServerEnv } from "../types";
+import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 
 export const createContext = async (
-  //   ops: FetchCreateContextFnOptions,
+  _ops: FetchCreateContextFnOptions,
   hono: Context<ServerEnv>
 ) => {
   return {

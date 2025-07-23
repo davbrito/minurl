@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@fontsource-variable/roboto-flex": "^5.2.6",
+    "@hono/trpc-server": "^0.4.0",
     "@hono/zod-validator": "^0.7.2",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-query": "^5.83.0",

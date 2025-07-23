@@ -1,11 +1,11 @@
-import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import { trpcServer } from "@hono/trpc-server";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
+import { apiKeyAuth } from "./middleware";
 import { createContext } from "./rpc/context";
 import { appRouter } from "./rpc/router";
 import { visitUrl } from "./shortener";
 import type { ServerEnv } from "./types";
-import { apiKeyAuth } from "./middleware";
 
 const app = new Hono<ServerEnv>();
 
@@ -37,16 +37,15 @@ app.get("/x/:id", async (ctx) => {
   return ctx.redirect(fullUrl, 303);
 });
 
-app.use("/rpc/*", apiKeyAuth({ soft: true }), async (c) => {
-  return fetchRequestHandler({
-    endpoint: "/trpc",
-    req: c.req.raw,
+app.use(
+  "/rpc/*",
+  apiKeyAuth({ soft: true }),
+  trpcServer({
+    endpoint: "/rpc",
     router: appRouter,
-    createContext() {
-      return createContext(c);
-    }
-  });
-});
+    createContext
+  })
+);
 
 export default app;
 
