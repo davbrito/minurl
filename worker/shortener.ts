@@ -1,7 +1,5 @@
 import { nanoid } from "nanoid";
 
-const EXPIRATION_TIME_SEC = 10000;
-
 export function getUrlKey(url: string = "") {
   return `url:${url}`;
 }
@@ -24,11 +22,8 @@ export async function storeUrl(kv: KVNamespace, url: string) {
   id = nanoid();
 
   await Promise.all([
-    kv.put(getIdKey(id), url, { expirationTtl: EXPIRATION_TIME_SEC }),
-    kv.put(getUrlKey(url), "", {
-      expirationTtl: EXPIRATION_TIME_SEC,
-      metadata: { id },
-    }),
+    kv.put(getIdKey(id), url),
+    kv.put(getUrlKey(url), "", { metadata: { id } })
   ]);
 
   return id;
@@ -42,7 +37,7 @@ export async function visitUrl(
   c: ExecutionContext,
   kv: KVNamespace,
   id: string,
-  _referrer?: string,
+  _referrer?: string
 ) {
   const url = await kv.get(getIdKey(id));
   if (url === null) return null;
@@ -60,10 +55,7 @@ async function addVisit(kv: KVNamespace, url: string) {
 
   res.metadata.visits = (res.metadata.visits || 0) + 1;
 
-  await kv.put(key, res.value || "", {
-    metadata: res.metadata,
-    expirationTtl: EXPIRATION_TIME_SEC,
-  });
+  await kv.put(key, res.value || "", { metadata: res.metadata });
 }
 
 export type UrlMetadata = {
@@ -84,6 +76,6 @@ export async function removeUrl(kv: KVNamespace, id: string) {
 
   await Promise.all([
     kv.delete(getIdKey(id)),
-    url && kv.delete(getUrlKey(url)),
+    url && kv.delete(getUrlKey(url))
   ]);
 }
