@@ -127,4 +127,5 @@ build
 # wrangler files
 .wrangler
 .dev.vars*
+!.dev.vars.example
 worker-configuration.d.ts

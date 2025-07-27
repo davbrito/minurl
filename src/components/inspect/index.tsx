@@ -1,5 +1,7 @@
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { trpc } from "../../rpc";
+import { FaList, FaExternalLinkAlt, FaSpinner, FaTrash } from "react-icons/fa";
+import { getMinifiedPath } from "../../../worker/shortener";
 
 function Inspect() {
   const {
@@ -9,23 +11,20 @@ function Inspect() {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-    refetch,
+    refetch
   } = useInfiniteQuery(
     trpc.listUrls.infiniteQueryOptions(
       {},
-      { getNextPageParam: (lastPage) => lastPage.nextCursor },
-    ),
+      { getNextPageParam: (lastPage) => lastPage.nextCursor }
+    )
   );
 
   const remove = useMutation(
     trpc.deleteUrl.mutationOptions({
       onSuccess: () => {
         refetch();
-      },
-      onError: (error) => {
-        alert(error.message);
-      },
-    }),
+      }
+    })
   );
 
   if (isPending) {
@@ -39,13 +38,13 @@ function Inspect() {
   return (
     <div className="flex flex-1 flex-col">
       <h1 className="p-2 text-lg font-semibold">
-        <i className="fa-solid fa-list text-sm"></i> Minified URLs
+        <FaList className="inline text-sm" /> Minified URLs
       </h1>
       <ul className="grow">
         {Iterator.from(data.pages)
           .flatMap((page) => page.urls)
           .map((url) => {
-            const minifiedUrl = `/x/${url.id}`;
+            const minifiedUrl = getMinifiedPath(url.id);
             return (
               <li
                 key={url.id}
@@ -58,7 +57,7 @@ function Inspect() {
                     rel="noopener noreferrer"
                   >
                     {url.url}{" "}
-                    <i className="fa-solid fa-external-link text-xs"></i>
+                    <FaExternalLinkAlt className="inline align-baseline text-xs" />
                   </a>
                   <pre className="w-fit rounded bg-zinc-600 px-1 text-xs break-all text-white">
                     {window.location.origin}
@@ -75,9 +74,9 @@ function Inspect() {
                   disabled={remove.isPending}
                 >
                   {remove.isPending && url.id === remove.variables?.id ? (
-                    <i className="fa-solid fa-spinner animate-spin text-rose-100/90"></i>
+                    <FaSpinner className="animate-spin text-rose-100/90" />
                   ) : (
-                    <i className="fa-solid fa-trash text-rose-100/90"></i>
+                    <FaTrash className="text-rose-100/90" />
                   )}
                 </button>
               </li>
@@ -99,7 +98,7 @@ export default Inspect;
 function Pagination({
   onMore,
   hasMore,
-  loadingMore,
+  loadingMore
 }: {
   onMore: () => void;
   hasMore: boolean;

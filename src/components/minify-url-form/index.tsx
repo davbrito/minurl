@@ -1,31 +1,24 @@
 import { useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
+import { getPreviewPath } from "../../../worker/shortener";
 import { trpc } from "../../rpc";
+import CreatedUrls from "../created-urls";
 
 const MinifyUrlForm = () => {
   const [, setLocation] = useLocation();
   const mutation = useMutation(
     trpc.shorten.mutationOptions({
-      onSuccess: (data, variables) => {
-        setLocation(
-          `/minified?` +
-            new URLSearchParams({
-              minified_url: data.minifiedUrl,
-              url: variables.url,
-            }).toString(),
-        );
-      },
-      onError: (error) => {
-        alert(error.message);
-      },
-    }),
+      onSuccess: (data) => {
+        setLocation(getPreviewPath(data.id));
+      }
+    })
   );
 
   return (
-    <div className="grid size-full min-h-0 min-w-0 grow place-items-center px-12">
+    <div className="flex size-full min-h-0 min-w-0 grow flex-col items-center justify-between gap-8 px-6 py-10 sm:justify-evenly sm:px-12">
       <form
         className={
-          "flex w-full max-w-130 flex-col items-center gap-3 rounded-3xl border border-purple-300/50 bg-purple-200 p-6 shadow-md shadow-purple-600/20"
+          "flex w-full flex-col items-center gap-3 rounded-3xl border border-purple-300/50 bg-purple-200 p-3 shadow-md shadow-purple-600/10 sm:max-w-130 sm:p-6"
         }
         onSubmit={async (e) => {
           e.preventDefault();
@@ -33,7 +26,7 @@ const MinifyUrlForm = () => {
           const formData = new FormData(e.currentTarget);
 
           mutation.mutate({
-            url: formData.get("url") as string,
+            url: formData.get("url") as string
           });
         }}
       >
@@ -42,7 +35,7 @@ const MinifyUrlForm = () => {
         </label>
         <input
           className={
-            "focus:ring-primary/50 focus:border-primary/80 w-full grow appearance-none rounded-md border border-zinc-300 bg-white/80 px-2 py-1 font-mono text-xl inset-shadow-sm transition-shadow placeholder:text-zinc-400 focus:ring-3 focus:outline-none"
+            "focus:ring-primary/50 focus:border-primary/80 w-full grow appearance-none rounded-md border border-zinc-300 bg-white/80 px-2 py-1 font-mono text-base inset-shadow-sm transition-shadow placeholder:text-zinc-400 focus:ring-3 focus:outline-none sm:text-xl"
           }
           required
           type="url"
@@ -54,6 +47,7 @@ const MinifyUrlForm = () => {
           Minify
         </button>
       </form>
+      <CreatedUrls />
     </div>
   );
 };

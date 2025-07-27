@@ -1,19 +1,12 @@
 import type { MiddlewareHandler } from "hono";
-import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import type { ServerEnv } from "./types";
-
-const COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: true,
-  sameSite: "Strict",
-  maxAge: 60 * 60 * 24 * 30
-} as const;
 
 export function apiKeyAuth({
   soft = false
 } = {}): MiddlewareHandler<ServerEnv> {
   return async (c, next) => {
-    const apiKeyCookie = getCookie(c, "ak");
+    const session = c.get("session");
+    const apiKeyCookie = session.get("adminKey");
     const apiKey =
       apiKeyCookie ||
       c.req.header("X-API-Key") ||
@@ -23,9 +16,7 @@ export function apiKeyAuth({
 
     if (!apiKey || apiKey !== c.env.SECRET_KEY) {
       if (apiKeyCookie) {
-        // If the cookie exists but the key is invalid, delete it
-        console.log("[auth] deleting invalid key cookie");
-        deleteCookie(c, "ak");
+        session.forget("adminKey");
       }
       c.set("isAuthenticated", false);
       if (!soft) {
@@ -34,8 +25,7 @@ export function apiKeyAuth({
     } else {
       // If the API key is valid, set it in the cookie
       if (!apiKeyCookie) {
-        console.log("[auth] setting key cookie");
-        setCookie(c, "ak", apiKey, COOKIE_OPTIONS);
+        session.set("adminKey", apiKey);
       }
 
       c.set("isAuthenticated", true);

@@ -13,7 +13,9 @@ function App() {
         <MinifyUrlForm />
       </Route>
       <Route path="/minified">
-        <Preview />
+        <div className="grow p-6">
+          <Preview />
+        </div>
       </Route>
       <Route path="/_internal">
         <Inspect />

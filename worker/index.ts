@@ -1,5 +1,7 @@
 import { trpcServer } from "@hono/trpc-server";
+import { env } from "cloudflare:workers";
 import { Hono } from "hono";
+import { CookieStore, sessionMiddleware } from "hono-sessions";
 import { logger } from "hono/logger";
 import { apiKeyAuth } from "./middleware";
 import { createContext } from "./rpc/context";
@@ -10,6 +12,20 @@ import type { ServerEnv } from "./types";
 const app = new Hono<ServerEnv>();
 
 app.use(logger());
+
+app.use(
+  "*",
+  sessionMiddleware({
+    encryptionKey: env.ENCRYPTION_KEY,
+    store: new CookieStore(),
+    cookieOptions: {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+      maxAge: 60 * 60 * 24 * 30 // 30 days
+    }
+  })
+);
 
 app.get("/x/:id", async (ctx) => {
   const { env, req } = ctx;

@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
+import { FaBug } from "react-icons/fa";
 import { trpc } from "../../rpc";
 
 const Header = () => {
   const { data: { isAuthenticated } = {} } = useQuery(
-    trpc.isAuthenticated.queryOptions(),
+    trpc.isAuthenticated.queryOptions()
   );
 
   return (
@@ -22,7 +23,7 @@ const Header = () => {
           href="/_internal"
           className="rounded-md bg-neutral-200 px-2 py-1 font-bold"
         >
-          <i className="fa-solid fa-bug text-sm"></i> Internal
+          <FaBug className="inline text-sm" /> Internal
         </Link>
       ) : null}
     </header>

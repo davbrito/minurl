@@ -36,7 +36,9 @@ export default tseslint.config([
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }
-      ]
+      ],
+      "react/prop-types": 0,
+      "react/jsx-no-leaked-render": 2
     },
     settings: {
       react: {

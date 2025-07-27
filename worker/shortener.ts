@@ -12,6 +12,10 @@ export function getMinifiedPath(id: string) {
   return `/x/${id}`;
 }
 
+export function getPreviewPath(id: string) {
+  return `/minified?${new URLSearchParams({ id })}`;
+}
+
 export async function storeUrl(kv: KVNamespace, url: string) {
   let id = await kv.get(url);
 
@@ -78,4 +82,30 @@ export async function removeUrl(kv: KVNamespace, id: string) {
     kv.delete(getIdKey(id)),
     url && kv.delete(getUrlKey(url))
   ]);
+}
+
+export async function getUrls(kv: KVNamespace, ids: string[]) {
+  if (ids.length === 0) {
+    return { urls: [] };
+  }
+
+  const urls = await kv.get<string>(ids.map((id) => getIdKey(id)));
+
+  return {
+    urls: ids.map((id) => ({ id, url: urls.get(getIdKey(id)) || "" }))
+  };
+}
+
+export async function getUrlWithMetadata(kv: KVNamespace, id: string) {
+  const url = await kv.get<string>(getIdKey(id));
+  if (!url) return null;
+  const result = await kv.getWithMetadata<UrlMetadata>(getUrlKey(url));
+
+  console.log("getUrlWithMetadata", result);
+
+  return {
+    id,
+    url,
+    visits: result.metadata?.visits || 0
+  };
 }

@@ -1,5 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRoot } from "react-dom/client";
+import { Toaster } from "react-hot-toast";
 import { Router } from "wouter";
 import App from "./App";
 import { queryClient } from "./query";
@@ -14,7 +16,9 @@ reactRoot.render(
     <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
       <Router>
         <App />
+        <Toaster position="top-right" />
+        <ReactQueryDevtools initialIsOpen={false} />
       </Router>
     </TRPCProvider>
-  </QueryClientProvider>,
+  </QueryClientProvider>
 );
