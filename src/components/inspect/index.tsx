@@ -1,7 +1,8 @@
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
-import { trpc } from "../../rpc";
-import { FaList, FaExternalLinkAlt, FaSpinner, FaTrash } from "react-icons/fa";
+import { FaExternalLinkAlt, FaList } from "react-icons/fa";
 import { getMinifiedPath } from "../../../worker/shortener";
+import { trpc } from "../../rpc";
+import RemoveButton from "../remove-button";
 
 function Inspect() {
   const {
@@ -67,18 +68,11 @@ function Inspect() {
                     Visitas: {url.visits ?? 0}
                   </span>
                 </div>
-                <button
-                  type="button"
-                  className="grid size-7 place-items-center rounded-md bg-linear-to-br from-rose-400 to-rose-700"
+                <RemoveButton
                   onClick={() => remove.mutate({ id: url.id })}
                   disabled={remove.isPending}
-                >
-                  {remove.isPending && url.id === remove.variables?.id ? (
-                    <FaSpinner className="animate-spin text-rose-100/90" />
-                  ) : (
-                    <FaTrash className="text-rose-100/90" />
-                  )}
-                </button>
+                  loading={remove.isPending && url.id === remove.variables?.id}
+                />
               </li>
             );
           })
