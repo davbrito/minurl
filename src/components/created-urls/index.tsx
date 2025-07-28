@@ -32,7 +32,7 @@ function CreatedUrls() {
   }
 
   return (
-    <div className="w-full max-w-2xl min-w-0 rounded-xl border border-gray-300 bg-white p-1">
+    <div className="w-full max-w-2xl min-w-0 rounded-xl border border-gray-300 bg-white p-1 shadow-[2px_2px_0_var(--color-gray-300)]">
       <div className="flex items-center gap-1 p-2">
         <AiOutlineHistory size={14} className="text-gray-500" />
         <h2 className="text-xs font-semibold text-gray-700">Historial</h2>
