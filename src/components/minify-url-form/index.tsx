@@ -18,8 +18,11 @@ const MinifyUrlForm = () => {
     <div className="flex size-full min-h-0 min-w-0 grow flex-col items-center justify-between gap-8 px-6 py-10 sm:justify-evenly sm:px-12">
       <form
         className={
-          "flex w-full flex-col items-center gap-3 rounded-3xl border border-purple-300/50 bg-purple-200 p-3 shadow-md shadow-purple-600/10 sm:max-w-130 sm:p-6"
+          "flex w-full flex-col items-center gap-3 rounded-3xl border border-purple-300 bg-purple-200 p-3 sm:max-w-130 sm:p-6"
         }
+        style={{
+          boxShadow: "2px 2px 0 var(--color-purple-300) "
+        }}
         onSubmit={async (e) => {
           e.preventDefault();
 
