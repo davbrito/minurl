@@ -32,50 +32,59 @@ function CreatedUrls() {
   }
 
   return (
-    <div className="w-full max-w-2xl min-w-0 rounded-xl border border-gray-300 bg-white p-1 shadow-[2px_2px_0_var(--color-gray-300)]">
-      <div className="flex items-center gap-1 p-2">
-        <AiOutlineHistory size={14} className="text-gray-500" />
-        <h2 className="text-xs font-semibold text-gray-700">Historial</h2>
+    <div className="mt-auto flex h-50 w-full max-w-130 min-w-0 flex-col items-center">
+      <div className="flex min-h-0 w-full min-w-0 flex-col overflow-auto rounded-xl border border-gray-300 bg-white shadow-[2px_2px_0_var(--color-gray-300)]">
+        <div className="flex items-center gap-1 p-2">
+          <AiOutlineHistory size={14} className="text-gray-500" />
+          <h2 className="text-xs font-semibold text-gray-700">Historial</h2>
 
-        <button
-          type="button"
-          title={show ? "Ocultar" : "Mostrar"}
-          className="ml-auto aspect-square rounded-md p-1 text-xs text-gray-500 hover:bg-gray-100"
-          onClick={() => {
-            setShow((prev) => !prev);
-          }}
-        >
-          {show ? <FaMinus /> : <FaPlus />}
-        </button>
-      </div>
-      <ul id="history-list" className="max-h-44 overflow-y-auto" hidden={!show}>
-        {data.urls.map((item) => (
-          <li
-            key={item.id}
-            className="flex items-center justify-between border-t border-gray-100 p-1"
+          <button
+            type="button"
+            title={show ? "Ocultar" : "Mostrar"}
+            className="ml-auto aspect-square rounded-md p-1 text-xs text-gray-500 hover:bg-gray-100"
+            onClick={() => {
+              setShow((prev) => !prev);
+            }}
           >
-            <div className="flex min-w-0 flex-1 flex-col">
-              <a
-                href={getPreviewPath(item.id)}
-                className="min-w-0 truncate text-blue-600 hover:underline"
-              >
-                {item.url}
-              </a>
-              <div className="truncate text-xs text-gray-500">
-                {new URL(getMinifiedPath(item.id), window.location.origin).href}
-              </div>
-            </div>
-            <button
-              className="ml-2 rounded-md p-1 hover:bg-red-100"
-              title="Eliminar"
-              onClick={() => mutation.mutate({ id: item.id })}
-              disabled={mutation.isPending}
+            {show ? <FaMinus /> : <FaPlus />}
+          </button>
+        </div>
+        <ul
+          id="history-list"
+          className="min-h-0 overflow-y-auto"
+          hidden={!show}
+        >
+          {data.urls.map((item) => (
+            <li
+              key={item.id}
+              className="flex items-center justify-between border-t border-gray-100 px-2 py-1"
             >
-              <AiOutlineDelete className="text-red-500" size={16} />
-            </button>
-          </li>
-        ))}
-      </ul>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <a
+                  href={getPreviewPath(item.id)}
+                  className="min-w-0 truncate text-blue-600 hover:underline"
+                >
+                  {item.url}
+                </a>
+                <div className="truncate text-xs text-gray-500">
+                  {
+                    new URL(getMinifiedPath(item.id), window.location.origin)
+                      .href
+                  }
+                </div>
+              </div>
+              <button
+                className="ml-2 rounded-md p-1 hover:bg-red-100"
+                title="Eliminar"
+                onClick={() => mutation.mutate({ id: item.id })}
+                disabled={mutation.isPending}
+              >
+                <AiOutlineDelete className="text-red-500" size={16} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

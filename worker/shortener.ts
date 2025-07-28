@@ -17,7 +17,9 @@ export function getPreviewPath(id: string) {
 }
 
 export async function storeUrl(kv: KVNamespace, url: string) {
-  let id = await kv.get(url);
+  let id = await kv
+    .getWithMetadata<UrlMetadata>(getUrlKey(url))
+    .then((res) => res?.metadata?.id || null);
 
   if (id !== null) {
     return id;
@@ -100,8 +102,6 @@ export async function getUrlWithMetadata(kv: KVNamespace, id: string) {
   const url = await kv.get<string>(getIdKey(id));
   if (!url) return null;
   const result = await kv.getWithMetadata<UrlMetadata>(getUrlKey(url));
-
-  console.log("getUrlWithMetadata", result);
 
   return {
     id,
