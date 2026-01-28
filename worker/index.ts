@@ -1,4 +1,3 @@
-import { trpcServer } from "@hono/trpc-server";
 import { env } from "cloudflare:workers";
 import { Hono } from "hono";
 import { CookieStore, sessionMiddleware } from "hono-sessions";
@@ -6,8 +5,6 @@ import { logger } from "hono/logger";
 import { createRequestHandler, RouterContextProvider } from "react-router";
 import { serverContext } from "../lib/contexts";
 import { apiKeyAuth } from "./middleware";
-import { createContext } from "./rpc/context";
-import { appRouter } from "./rpc/router";
 import { visitUrl } from "./shortener";
 import type { ServerEnv } from "./types";
 
@@ -54,16 +51,6 @@ app.get("/x/:id", async (ctx) => {
 
   return ctx.redirect(fullUrl, 303);
 });
-
-app.use(
-  "/rpc/*",
-  apiKeyAuth({ soft: true }),
-  trpcServer({
-    endpoint: "/rpc",
-    router: appRouter,
-    createContext
-  })
-);
 
 app.use("*", apiKeyAuth({ soft: true }), (c) => {
   const requestHandler = createRequestHandler(

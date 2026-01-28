@@ -1,14 +1,10 @@
 import "./styles.css";
 
-import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { Links, Meta, Outlet, Scripts } from "react-router";
 import { serverContext } from "../lib/contexts";
 import type { Route } from "./+types/root";
 import AppLayout from "./components/app-layout";
-import { getQueryClient } from "./query";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -57,15 +53,12 @@ export function loader(ctx: Route.LoaderArgs) {
 export default function App({
   loaderData: { isAuthenticated }
 }: Route.ComponentProps) {
-  const [queryClient] = useState(() => getQueryClient());
-
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <AppLayout isAuthenticated={isAuthenticated}>
         <Outlet />
       </AppLayout>
       <Toaster position="top-right" />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    </>
   );
 }
