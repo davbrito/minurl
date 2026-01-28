@@ -2,10 +2,25 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "react-hot-toast";
-import { Router } from "wouter";
+import { Router, type AroundNavHandler } from "wouter";
 import App from "./App";
 import { queryClient } from "./query";
 import { trpcClient, TRPCProvider } from "./rpc";
+import { flushSync } from "react-dom";
+
+const aroundNav: AroundNavHandler = (navigate, to, options) => {
+  if (!document.startViewTransition) {
+    // check if supported
+    navigate(to, options);
+    return;
+  }
+
+  document.startViewTransition(() => {
+    flushSync(() => {
+      navigate(to, options);
+    });
+  });
+};
 
 const root = document.getElementById("root")!;
 
@@ -14,7 +29,7 @@ const reactRoot = createRoot(root);
 reactRoot.render(
   <QueryClientProvider client={queryClient}>
     <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-      <Router>
+      <Router aroundNav={aroundNav}>
         <App />
         <Toaster position="top-right" />
         <ReactQueryDevtools initialIsOpen={false} />

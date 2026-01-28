@@ -1,4 +1,4 @@
-import { nanoid } from "nanoid";
+import { nanoid } from "nanoid"; 
 
 export function getUrlKey(url: string = "") {
   return `url:${url}`;
@@ -16,6 +16,27 @@ export function getPreviewPath(id: string) {
   return `/minified?${new URLSearchParams({ id })}`;
 }
 
+const MIN_ID_LENGTH = 5;
+
+function generateId(url: string) {
+  const initials = url
+    .replace(/^(https?:\/\/)?(www\.)?/, "")
+    .split(/[^a-zA-Z0-9]/)
+    .slice(0, 5)
+    .map((part) => part.charAt(0))
+
+  const prefix = sample(initials,  Math.max(3, initials.length) ).join('')
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+  
+  const suffixLength = Math.max(MIN_ID_LENGTH - initials.length, 5);
+
+  const suffix = nanoid(suffixLength);
+
+  return `${prefix}-${suffix}`;
+}
+
+
 export async function storeUrl(kv: KVNamespace, url: string) {
   let id = await kv
     .getWithMetadata<UrlMetadata>(getUrlKey(url))
@@ -25,7 +46,7 @@ export async function storeUrl(kv: KVNamespace, url: string) {
     return id;
   }
 
-  id = nanoid();
+  id = generateId(url);
 
   await Promise.all([
     kv.put(getIdKey(id), url),
@@ -108,4 +129,25 @@ export async function getUrlWithMetadata(kv: KVNamespace, id: string) {
     url,
     visits: result.metadata?.visits || 0
   };
+}
+
+
+function sample<T>(array: ArrayLike<T>, size: number): T[] {
+  const result: T[] = [];
+  const taken = new Set<number>();
+  const n = array.length;
+
+  size = Math.min(size, n);
+
+  const replace = size > n
+
+  while (result.length < size) {
+    const index = Math.floor(Math.random() * n);
+    if (!taken.has(index) || replace) {
+      taken.add(index);
+      result.push(array[index]);
+    }
+  } 
+
+  return result;
 }

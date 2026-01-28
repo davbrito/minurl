@@ -68,7 +68,7 @@ export const appRouter = router({
         };
       }
     ),
-  deleteUrl: protectedProcedure
+  deleteUrl: publicProcedure
     .input(
       z.object({
         id: z.string().nonempty()
