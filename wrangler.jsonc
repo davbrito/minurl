@@ -1,17 +1,14 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "minurl",
-  "compatibility_date": "2025-05-05",
+  "compatibility_date": "2026-01-24",
   "main": "./worker/index.ts",
-  "assets": {
-    "directory": "./dist/client",
-    "not_found_handling": "single-page-application",
-    "run_worker_first": ["/x/*", "/rpc/*"]
-  },
+  "compatibility_flags": ["nodejs_compat"],
   "kv_namespaces": [
     {
       "binding": "MinifiedUrls",
-      "id": "3792666bc49d458a934a05e93812de9b"
+      "id": "3792666bc49d458a934a05e93812de9b",
+      "remote": true
     }
   ],
   "observability": {

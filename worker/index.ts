@@ -3,6 +3,8 @@ import { env } from "cloudflare:workers";
 import { Hono } from "hono";
 import { CookieStore, sessionMiddleware } from "hono-sessions";
 import { logger } from "hono/logger";
+import { createRequestHandler, RouterContextProvider } from "react-router";
+import { serverContext } from "../lib/contexts";
 import { apiKeyAuth } from "./middleware";
 import { createContext } from "./rpc/context";
 import { appRouter } from "./rpc/router";
@@ -62,6 +64,25 @@ app.use(
     createContext
   })
 );
+
+app.use("*", apiKeyAuth({ soft: true }), (c) => {
+  const requestHandler = createRequestHandler(
+    () => import("virtual:react-router/server-build"),
+    import.meta.env.MODE
+  );
+
+  const context = new RouterContextProvider();
+
+  context.set(serverContext, {
+    env: c.env,
+    kv: c.env.MinifiedUrls,
+    executionCtx: c.executionCtx,
+    session: c.get("session"),
+    isAuthenticated: c.get("isAuthenticated")
+  });
+
+  return requestHandler(c.req.raw, context);
+});
 
 export default app;
 

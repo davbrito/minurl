@@ -9,7 +9,7 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   if (!ctx.isAuthenticated) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "You must be authenticated to access this resource.",
+      message: "You must be authenticated to access this resource."
     });
   }
 

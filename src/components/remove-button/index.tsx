@@ -3,8 +3,7 @@ import React from "react";
 import { AiOutlineDelete } from "react-icons/ai";
 import { CgSpinner } from "react-icons/cg";
 
-interface RemoveButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface RemoveButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
@@ -16,8 +15,8 @@ function RemoveButton({
   return (
     <button
       title="Eliminar"
-      {...props}
       type="button"
+      {...props}
       className={clsx(
         "ml-2 grid place-items-center rounded-md p-1 text-red-500 hover:bg-red-100",
         loading ? "bg-red-100" : null,

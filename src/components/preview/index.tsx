@@ -1,14 +1,16 @@
-import { skipToken, useQuery } from "@tanstack/react-query";
-import useSearchParams from "../../hooks/useSearchParams";
-import { trpc } from "../../rpc";
+import type { UrlWithMetadata } from "lib/services/shortener";
+import { useSearchParams } from "react-router";
 
-const Preview = () => {
-  const searchParams = useSearchParams();
+interface PreviewProps {
+  id?: string;
+  data: UrlWithMetadata | null;
+  baseUrl: string;
+}
 
-  const id = searchParams.get("id");
-  const { data, isLoading, isError, error } = useQuery(
-    trpc.getUrlById.queryOptions(id ? { id } : skipToken)
-  );
+function Preview({ id: propId, data, baseUrl }: PreviewProps) {
+  const [searchParams] = useSearchParams();
+
+  const id = propId || searchParams.get("id");
 
   if (!id) {
     return (
@@ -18,19 +20,10 @@ const Preview = () => {
     );
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex h-40 items-center justify-center">
-        <span className="mr-3 inline-block h-6 w-6 animate-spin rounded-full border-4 border-gray-300 border-t-blue-500"></span>
-        <span className="text-lg text-gray-600">Cargando...</span>
-      </div>
-    );
-  }
-
-  if (isError || !data) {
+  if (!data) {
     return (
       <div className="mx-auto max-w-xl rounded-lg border border-red-200 bg-red-50 p-6 text-red-700 shadow">
-        <p>Error: {error?.message || "No se pudo cargar la URL."}</p>
+        <p>No URL found for id: {id}</p>
       </div>
     );
   }
@@ -54,7 +47,7 @@ const Preview = () => {
           rel="noopener noreferrer"
           className="break-all text-blue-600 hover:underline"
         >
-          {new URL(`/x/${data.id}`, window.location.href).href}
+          {new URL(`/x/${data.id}`, baseUrl).href}
         </a>
       </p>
       <p>
@@ -62,6 +55,6 @@ const Preview = () => {
       </p>
     </div>
   );
-};
+}
 
 export default Preview;

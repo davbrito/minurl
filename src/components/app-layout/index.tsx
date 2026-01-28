@@ -1,25 +1,17 @@
-import { Route } from "wouter";
-import Header from "../components/header";
-import MinifyUrlForm from "../components/minify-url-form";
-import Preview from "../components/preview";
+import Header from "../header";
 import styles from "./styles.module.css";
-import Inspect from "../components/inspect";
 
-function App() {
+function AppLayout({
+  children,
+  isAuthenticated
+}: {
+  children: React.ReactNode;
+  isAuthenticated: boolean;
+}) {
   return (
     <main className={styles.root}>
-      <Header />
-      <Route path="/">
-        <MinifyUrlForm />
-      </Route>
-      <Route path="/minified">
-        <div className="grow p-6">
-          <Preview />
-        </div>
-      </Route>
-      <Route path="/_internal">
-        <Inspect />
-      </Route>
+      <Header isAuthenticated={isAuthenticated} />
+      {children}
       <footer className="border-t border-zinc-200/50 bg-zinc-50 p-2 text-center inset-shadow-sm">
         <div className="text-sm">
           Made with {"❤️"} by{" "}
@@ -51,4 +43,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppLayout;

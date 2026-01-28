@@ -1,4 +1,4 @@
-import { QueryCache, MutationCache, QueryClient } from "@tanstack/react-query";
+import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
 interface QueryMeta {
@@ -12,21 +12,33 @@ declare module "@tanstack/react-query" {
   }
 }
 
-export const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error, query) => {
-      if (query.meta?.skipErrorToast) return;
-      toast.error(error?.message || "Ocurrió un error en la consulta.");
-    }
-  }),
-  mutationCache: new MutationCache({
-    onError: (error) => {
-      toast.error(error?.message || "Ocurrió un error en la acción.");
-    }
-  }),
-  defaultOptions: {
-    queries: {
-      retry: false
-    }
+let client: QueryClient | null = null;
+
+export function getQueryClient() {
+  if (typeof window === "undefined") {
+    return createQueryClient();
   }
-});
+
+  return (client ??= createQueryClient());
+}
+
+function createQueryClient() {
+  return new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        if (query.meta?.skipErrorToast) return;
+        toast.error(error?.message || "Ocurrió un error en la consulta.");
+      }
+    }),
+    mutationCache: new MutationCache({
+      onError: (error) => {
+        toast.error(error?.message || "Ocurrió un error en la acción.");
+      }
+    }),
+    defaultOptions: {
+      queries: {
+        retry: false
+      }
+    }
+  });
+}

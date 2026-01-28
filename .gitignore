@@ -129,3 +129,5 @@ build
 .dev.vars*
 !.dev.vars.example
 worker-configuration.d.ts
+
+.react-router
