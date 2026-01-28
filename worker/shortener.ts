@@ -1,3 +1,4 @@
+import type { ExecutionContext } from "hono";
 import { nanoid } from "nanoid";
 
 export function getUrlKey(url: string = "") {
