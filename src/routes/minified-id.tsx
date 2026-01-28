@@ -20,7 +20,6 @@ export async function action({ params, context, request }: Route.ActionArgs) {
   const { id } = params;
 
   if (request.method === "DELETE") {
-    console.log("Deleting URL with id:", id);
     await removeUrl(kv, id);
     removeCreatedUrlId(session, id);
 
