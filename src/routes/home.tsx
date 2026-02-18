@@ -1,8 +1,8 @@
+import CreatedUrls from "@components/created-urls";
+import MinifyUrlForm from "@components/minify-url-form";
 import { getMinifiedPath, getPreviewPath } from "@features/shortener/helpers";
 import { createLink, listLinksBySession } from "@features/shortener/links";
 import { Form, redirect } from "react-router";
-import CreatedUrls from "src/components/created-urls";
-import MinifyUrlForm from "src/components/minify-url-form";
 import type { Route } from "./+types/home";
 
 export async function loader({ context, request }: Route.LoaderArgs) {

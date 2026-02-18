@@ -9,7 +9,6 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
-    "baseUrl": ".",
     "rootDirs": [".", "./.react-router/types"],
 
     "jsx": "react-jsx",
@@ -21,7 +20,9 @@
     "paths": {
       "@worker/*": ["./worker/*"],
       "@features/*": ["./src/features/*"],
-      "@components/*": ["./src/components/*"]
+      "@components/*": ["./src/components/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@core/*": ["./src/core/*"]
     }
   },
   "include": [

@@ -1,5 +1,8 @@
 import { getMinifiedPath, getPreviewPath } from "@features/shortener/helpers";
-import type { Link as LinkType } from "@features/shortener/links";
+import type {
+  Link as LinkType,
+  PaginationMetadata
+} from "@features/shortener/links";
 import { FaExternalLinkAlt, FaEye, FaList } from "react-icons/fa";
 import { Form, Link } from "react-router";
 import RemoveButton from "../remove-button";
@@ -7,18 +10,10 @@ import RemoveButton from "../remove-button";
 interface InspectProps {
   baseUrl: string;
   links: LinkType[];
-  prevCursor?: string;
-  cursor?: string;
-  nextCursor?: string;
+  pagination: PaginationMetadata;
 }
 
-function Inspect({
-  baseUrl,
-  links,
-  prevCursor,
-  nextCursor,
-  cursor
-}: InspectProps) {
+function Inspect({ baseUrl, links, pagination }: InspectProps) {
   return (
     <div className="flex flex-1 flex-col">
       <h1 className="p-2 text-lg font-semibold">
@@ -69,11 +64,7 @@ function Inspect({
           );
         })}
       </ul>
-      <Pagination
-        cursor={cursor}
-        nextCursor={nextCursor}
-        prevCursor={prevCursor}
-      />
+      <Pagination {...pagination} />
     </div>
   );
 }
@@ -81,29 +72,26 @@ function Inspect({
 export default Inspect;
 
 function Pagination({
-  cursor,
-  nextCursor,
-  prevCursor
-}: {
-  cursor?: string;
-  nextCursor?: string;
-  prevCursor?: string;
-}) {
-  if (!nextCursor && !prevCursor) return null;
+  startCursor,
+  endCursor,
+  hasNextPage,
+  hasPreviousPage
+}: PaginationMetadata) {
+  if (!hasNextPage && !hasPreviousPage) return null;
   return (
     <div className="mt-4 flex justify-center gap-2 p-3">
-      {prevCursor || cursor ? (
+      {hasPreviousPage ? (
         <Link
           className="button"
-          to={`?cursor=${encodeURIComponent(prevCursor || "")}`}
+          to={`?before=${encodeURIComponent(startCursor || "")}`}
         >
           {"Previous"}
         </Link>
       ) : null}
-      {nextCursor ? (
+      {hasNextPage ? (
         <Link
           className="button"
-          to={`?cursor=${encodeURIComponent(nextCursor || "")}`}
+          to={`?after=${encodeURIComponent(endCursor || "")}`}
         >
           {"Next"}
         </Link>

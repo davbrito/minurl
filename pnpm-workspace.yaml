@@ -3,3 +3,6 @@ ignoredBuiltDependencies:
   - esbuild
   - sharp
   - workerd
+
+overrides:
+  typescript: $typescript

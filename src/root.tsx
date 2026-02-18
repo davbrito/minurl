@@ -2,7 +2,7 @@ import "./styles.css";
 
 import { Toaster } from "react-hot-toast";
 import { Links, Meta, Outlet, Scripts } from "react-router";
-import { serverContext } from "../lib/contexts";
+import { serverContext } from "./core/contexts";
 import type { Route } from "./+types/root";
 import AppLayout from "./components/app-layout";
 
