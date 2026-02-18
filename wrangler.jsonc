@@ -20,7 +20,16 @@
       "enabled": true,
       "persist": true
     }
-  }
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "d1-minurl-prod",
+      "database_id": "fa9f7ebd-be9b-4035-814f-7079fba725d0",
+      "remote": true,
+      "migrations_dir": "drizzle/migrations"
+    }
+  ]
   /**
    * Smart Placement
    * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
