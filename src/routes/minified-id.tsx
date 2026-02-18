@@ -7,7 +7,7 @@ import type { Route } from "./+types/minified-id";
 export async function loader({ params, context, request }: Route.LoaderArgs) {
   const data = await findLink(context, params.id);
   const baseUrl = new URL(request.url).origin;
-  const shortUrl = new URL(getMinifiedPath(params.id), baseUrl).href;
+  const shortUrl = `${baseUrl}${getMinifiedPath(params.id)}`;
   return { id: params.id, data, shortUrl };
 }
 
