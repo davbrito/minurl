@@ -1,5 +1,5 @@
 import { serverContext } from "lib/contexts";
-import { getUrlKey, type UrlMetadata } from "worker/shortener";
+import { getUrlKey, type UrlMetadata } from "@features/shortener";
 import Inspect from "../components/inspect";
 import type { Route } from "./+types/_internal";
 

@@ -1,1 +1,2 @@
 SECRET_KEY="<your-secret-key-here>"
+ENCRYPTION_KEY="<your-encryption-key-here>"

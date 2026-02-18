@@ -3,7 +3,7 @@ import { shortenUrl } from "lib/services/shortener";
 import { Form, redirect } from "react-router";
 import CreatedUrls from "src/components/created-urls";
 import MinifyUrlForm from "src/components/minify-url-form";
-import { getPreviewPath, getUrls } from "worker/shortener";
+import { getPreviewPath, getUrls } from "@features/shortener";
 import type { Route } from "./+types/home";
 
 export async function loader({ context, request }: Route.LoaderArgs) {

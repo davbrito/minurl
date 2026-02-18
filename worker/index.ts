@@ -5,8 +5,8 @@ import { logger } from "hono/logger";
 import { createRequestHandler, RouterContextProvider } from "react-router";
 import { serverContext } from "../lib/contexts";
 import { apiKeyAuth } from "./middleware";
-import { visitUrl } from "./shortener";
 import type { ServerEnv } from "./types";
+import { visitUrl } from "@features/shortener";
 
 const app = new Hono<ServerEnv>();
 
@@ -52,12 +52,12 @@ app.get("/x/:id", async (ctx) => {
   return ctx.redirect(fullUrl, 303);
 });
 
-app.use("*", apiKeyAuth({ soft: true }), (c) => {
-  const requestHandler = createRequestHandler(
-    () => import("virtual:react-router/server-build"),
-    import.meta.env.MODE
-  );
+const requestHandler = createRequestHandler(
+  () => import("virtual:react-router/server-build"),
+  import.meta.env.MODE
+);
 
+app.use("*", apiKeyAuth({ soft: true }), (c) => {
   const context = new RouterContextProvider();
 
   context.set(serverContext, {

@@ -1,7 +1,7 @@
 import type { UrlWithMetadata } from "lib/services/shortener";
 import { FaExternalLinkAlt, FaEye, FaList } from "react-icons/fa";
 import { Form, Link } from "react-router";
-import { getMinifiedPath, getPreviewPath } from "../../../worker/shortener";
+import { getMinifiedPath, getPreviewPath } from "@features/shortener";
 import RemoveButton from "../remove-button";
 
 interface InspectProps {

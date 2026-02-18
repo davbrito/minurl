@@ -17,7 +17,12 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@worker/*": ["./worker/*"],
+      "@features/*": ["./src/features/*"],
+      "@components/*": ["./src/components/*"]
+    }
   },
   "include": [
     "./worker-configuration.d.ts",

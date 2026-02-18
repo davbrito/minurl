@@ -1,7 +1,7 @@
 import { serverContext } from "lib/contexts";
 import { getUrlWithMetadata } from "lib/services/shortener";
 import { removeCreatedUrlId } from "worker/session";
-import { removeUrl } from "worker/shortener";
+import { removeUrl } from "@features/shortener";
 import Preview from "../components/preview";
 import type { Route } from "./+types/minified-id";
 import { redirect } from "react-router";

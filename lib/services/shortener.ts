@@ -5,7 +5,7 @@ import {
   getUrlKey,
   storeUrl,
   type UrlMetadata
-} from "worker/shortener";
+} from "@features/shortener";
 
 export async function getUrlWithMetadata(
   kv: KVNamespace,
