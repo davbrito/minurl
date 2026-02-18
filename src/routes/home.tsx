@@ -1,18 +1,14 @@
 import { getMinifiedPath, getPreviewPath } from "@features/shortener/helpers";
-import { createLink, listLinksBySlugs } from "@features/shortener/links";
-import { serverContext } from "lib/contexts";
+import { createLink, listLinksBySession } from "@features/shortener/links";
 import { Form, redirect } from "react-router";
 import CreatedUrls from "src/components/created-urls";
 import MinifyUrlForm from "src/components/minify-url-form";
 import type { Route } from "./+types/home";
 
 export async function loader({ context, request }: Route.LoaderArgs) {
-  const { session } = context.get(serverContext);
-
-  const ids = session.get("createdUrlIds") || [];
   const baseUrl = new URL(request.url).origin;
 
-  const links = await listLinksBySlugs(context, ids);
+  const links = await listLinksBySession(context);
 
   return {
     urls: links.map((link) => ({

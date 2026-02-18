@@ -1,4 +1,3 @@
-import { addCreatedUrlId, removeCreatedUrlId } from "@worker/session";
 import { eq, sql } from "drizzle-orm";
 import { serverContext } from "lib/contexts";
 import type { RouterContextProvider } from "react-router";
@@ -19,14 +18,14 @@ export async function createLink(
 
   const slug = generateSlug(url);
 
+  const sessionId = session.id;
+
   const result = await db
     .insert(links)
-    .values({ slug, url, description })
+    .values({ slug, url, description, sessionId })
     .returning();
 
   await kv.put(getSlugToUrlKey(slug), url);
-
-  addCreatedUrlId(session, slug);
 
   return result[0];
 }
@@ -99,7 +98,7 @@ export async function deleteLink(
   context: Readonly<RouterContextProvider>,
   slug: string
 ) {
-  const { db, kv, session } = context.get(serverContext);
+  const { db, kv } = context.get(serverContext);
 
   const link = await db.query.links.findFirst({
     where: { slug }
@@ -109,8 +108,6 @@ export async function deleteLink(
 
   await db.delete(links).where(eq(links.slug, slug));
   await kv.delete(getSlugToUrlKey(slug));
-
-  removeCreatedUrlId(session, slug);
 }
 
 export async function listLinks(
@@ -156,11 +153,12 @@ export async function listLinks(
   return { links, nextCursor };
 }
 
-export async function listLinksBySlugs(
-  context: Readonly<RouterContextProvider>,
-  slugs: string[]
+export async function listLinksBySession(
+  context: Readonly<RouterContextProvider>
 ): Promise<Link[]> {
-  const { db } = context.get(serverContext);
+  const { db, session } = context.get(serverContext);
 
-  return await db.query.links.findMany({ where: { slug: { in: slugs } } });
+  if (!session.id) return [];
+
+  return await db.query.links.findMany({ where: { sessionId: session.id } });
 }

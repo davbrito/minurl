@@ -1,12 +1,13 @@
 import { visitUrl } from "@features/shortener/links";
+import { useSession, useSessionStorage } from "@hono/session";
 import { env } from "cloudflare:workers";
 import { Hono, type Context } from "hono";
-import { CookieStore, sessionMiddleware } from "hono-sessions";
 import { logger } from "hono/logger";
 import { createRequestHandler, RouterContextProvider } from "react-router";
 import { createDb } from "src/db";
 import { serverContext } from "../lib/contexts";
 import { apiKeyAuth } from "./middleware";
+import type { SessionData } from "./session";
 import type { ServerEnv } from "./types";
 
 const app = new Hono<ServerEnv>();
@@ -14,17 +15,23 @@ const app = new Hono<ServerEnv>();
 app.use(logger());
 
 app.use(
-  "*",
-  sessionMiddleware({
-    encryptionKey: env.ENCRYPTION_KEY,
-    store: new CookieStore(),
-    cookieOptions: {
-      httpOnly: true,
-      secure: true,
-      sameSite: "Strict",
-      maxAge: 60 * 60 * 24 * 30 // 30 days
+  useSessionStorage<SessionData, ServerEnv>((c) => ({
+    delete(sid) {
+      c.executionCtx.waitUntil(env.KV.delete("session:" + sid));
+    },
+    get(sid) {
+      return env.KV.get("session:" + sid, "json");
+    },
+    set(sid, data) {
+      c.executionCtx.waitUntil(
+        env.KV.put("session:" + sid, JSON.stringify(data), {
+          // Optionally configure session data to expire some time after the session cookie expires.
+          expirationTtl: 60 * 60 * 24 * 30 // 30 days in seconds
+        })
+      );
     }
-  })
+  })),
+  useSession({ secret: env.ENCRYPTION_KEY })
 );
 
 app.get("/x/:id", async (ctx) => {
@@ -72,7 +79,8 @@ function createRouterContext(c: Context<ServerEnv>) {
     executionCtx: c.executionCtx,
     session: c.get("session"),
     isAuthenticated: c.get("isAuthenticated"),
-    db: createDb(c.env.DB)
+    db: createDb(c.env.DB),
+    hono: c
   });
 
   return context;

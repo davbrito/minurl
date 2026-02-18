@@ -1,12 +1,15 @@
 import { listLinks } from "@features/shortener/links";
+import { deleteCookie, setCookie } from "hono/cookie";
 import { serverContext } from "lib/contexts";
 import Inspect from "../components/inspect";
 import type { Route } from "./+types/_internal";
 
 const DEFAULT_PAGE_SIZE = 10;
 
+const PREV_CURSOR_COOKIE_KEY = "minurl_prev_cursors_flash";
+
 export async function loader({ context, request }: Route.LoaderArgs) {
-  const { isAuthenticated, session } = context.get(serverContext);
+  const { isAuthenticated, hono } = context.get(serverContext);
 
   if (!isAuthenticated) {
     throw new Response("Unauthorized", { status: 401 });
@@ -21,7 +24,9 @@ export async function loader({ context, request }: Route.LoaderArgs) {
 
   const { links, nextCursor } = await listLinks(context, cursor, limit);
 
-  let prevCursors = session.get("prevCursors") || [];
+  const prevCursorsFromCookie =
+    deleteCookie(hono, PREV_CURSOR_COOKIE_KEY) ?? "";
+  let prevCursors = prevCursorsFromCookie.split(",").filter(Boolean);
 
   if (cursor) {
     prevCursors = prevCursors.filter((c) => c !== cursor);
@@ -32,9 +37,17 @@ export async function loader({ context, request }: Route.LoaderArgs) {
   const prevCursor = prevCursors.at(-1) || undefined;
 
   if (cursor) {
-    session.flash("prevCursors", prevCursors.concat(cursor));
-  } else {
-    session.forget("prevCursors");
+    setCookie(
+      hono,
+      PREV_CURSOR_COOKIE_KEY,
+      prevCursors.concat(cursor).join(","),
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: "lax",
+        maxAge: 60 * 60 // 1 hour
+      }
+    );
   }
 
   return {

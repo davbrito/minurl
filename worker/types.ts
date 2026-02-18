@@ -1,4 +1,4 @@
-import { Session } from "hono-sessions";
+import type { Session } from "@hono/session";
 import type { SessionData } from "./session";
 
 interface ServerVariables {

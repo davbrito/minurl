@@ -6,7 +6,8 @@ export function apiKeyAuth({
 } = {}): MiddlewareHandler<ServerEnv> {
   return async (c, next) => {
     const session = c.get("session");
-    const apiKeyCookie = session.get("adminKey");
+    const sessionData = await session.get();
+    const apiKeyCookie = sessionData?.adminKey;
     const apiKey =
       apiKeyCookie ||
       c.req.header("X-API-Key") ||
@@ -16,7 +17,10 @@ export function apiKeyAuth({
 
     if (!apiKey || apiKey !== c.env.SECRET_KEY) {
       if (apiKeyCookie) {
-        session.forget("adminKey");
+        session.update((data) => {
+          const { adminKey: _, ...rest } = data ?? {};
+          return rest;
+        });
       }
       c.set("isAuthenticated", false);
       if (!soft) {
@@ -25,7 +29,7 @@ export function apiKeyAuth({
     } else {
       // If the API key is valid, set it in the cookie
       if (!apiKeyCookie) {
-        session.set("adminKey", apiKey);
+        session.update((data) => ({ ...data, adminKey: apiKey }));
       }
 
       c.set("isAuthenticated", true);

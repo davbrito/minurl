@@ -47,12 +47,12 @@
   },
   "dependencies": {
     "@fontsource-variable/roboto-flex": "^5.2.8",
+    "@hono/session": "^0.2.0",
     "@hono/zod-validator": "^0.7.6",
     "@tailwindcss/vite": "^4.2.0",
     "clsx": "^2.1.1",
     "drizzle-orm": "1.0.0-beta.15-859cf75",
     "hono": "^4.11.10",
-    "hono-sessions": "^0.8.1",
     "isbot": "^5.1.35",
     "nanoid": "^5.1.6",
     "react": "^19.2.4",

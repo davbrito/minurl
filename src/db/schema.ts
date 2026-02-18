@@ -24,7 +24,13 @@ export const links = sqliteTable("links", {
     .default(sql`(unixepoch())`)
     .notNull(),
 
-  lastClickedAt: integer("last_clicked_at", { mode: "timestamp" })
+  lastClickedAt: integer("last_clicked_at", { mode: "timestamp" }),
+
+  // Si el usuario está logueado, llenamos userId.
+  userId: text("user_id"),
+
+  // Si es anónimo, llenamos el ID de su cookie de sesión.
+  sessionId: text("session_id")
 });
 
 // TABLA SECUNDARIA: Analíticas (Logs)
