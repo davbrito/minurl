@@ -128,12 +128,13 @@ export async function listLinks(
   const slugCursor = parts ? parts[1] : undefined;
 
   const links = await db.query.links.findMany({
-    where: cursor
-      ? {
-          RAW: (link) =>
-            sql`${link.createdAt} < ${createdAtCursor} OR (${link.createdAt} = ${createdAtCursor} AND ${link.slug} < ${slugCursor})`
-        }
-      : undefined,
+    where:
+      createdAtCursor && slugCursor
+        ? {
+            RAW: (link, { eq, lt, sql, and }) =>
+              sql`${lt(link.createdAt, createdAtCursor)} OR (${and(eq(link.createdAt, createdAtCursor), lt(link.slug, slugCursor))})`
+          }
+        : undefined,
     orderBy: (link, { desc }) => [desc(link.createdAt), desc(link.slug)],
     limit
   });
