@@ -4,7 +4,7 @@ import Preview from "../components/preview";
 import type { Route } from "./+types/minified";
 
 export async function loader({ request, context }: Route.LoaderArgs) {
-  const kv = context.get(serverContext).env.MinifiedUrls;
+  const kv = context.get(serverContext).env.KV;
   const url = new URL(request.url);
   const id = url.searchParams.get("id");
 

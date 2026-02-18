@@ -6,7 +6,7 @@
   "compatibility_flags": ["nodejs_compat"],
   "kv_namespaces": [
     {
-      "binding": "MinifiedUrls",
+      "binding": "KV",
       "id": "3792666bc49d458a934a05e93812de9b",
       "remote": true
     }

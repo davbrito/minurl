@@ -8,7 +8,7 @@ import { redirect } from "react-router";
 
 export async function loader({ params, context, request }: Route.LoaderArgs) {
   const { env } = context.get(serverContext);
-  const kv = env.MinifiedUrls;
+  const kv = env.KV;
   const data = await getUrlWithMetadata(kv, params.id);
   const baseUrl = new URL(request.url).origin;
   return { id: params.id, data, baseUrl };
@@ -16,7 +16,7 @@ export async function loader({ params, context, request }: Route.LoaderArgs) {
 
 export async function action({ params, context, request }: Route.ActionArgs) {
   const { env, session } = context.get(serverContext);
-  const kv = env.MinifiedUrls;
+  const kv = env.KV;
   const { id } = params;
 
   if (request.method === "DELETE") {

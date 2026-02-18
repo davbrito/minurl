@@ -8,7 +8,7 @@ import type { Route } from "./+types/home";
 
 export async function loader({ context, request }: Route.LoaderArgs) {
   const { env, session } = context.get(serverContext);
-  const kv = env.MinifiedUrls;
+  const kv = env.KV;
 
   const ids = session.get("createdUrlIds") || [];
   const urls = await getUrls(kv, ids, new URL(request.url).origin);
@@ -18,7 +18,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
 
 export async function action({ request, context }: Route.ActionArgs) {
   const { env, session, executionCtx } = context.get(serverContext);
-  const kv = env.MinifiedUrls;
+  const kv = env.KV;
 
   const data = await request.formData();
 

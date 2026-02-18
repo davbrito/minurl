@@ -38,7 +38,7 @@ app.get("/x/:id", async (ctx) => {
 
   const fullUrl = await visitUrl(
     ctx.executionCtx,
-    env.MinifiedUrls,
+    env.KV,
     id,
     req.header("referer")
   );
@@ -62,7 +62,7 @@ app.use("*", apiKeyAuth({ soft: true }), (c) => {
 
   context.set(serverContext, {
     env: c.env,
-    kv: c.env.MinifiedUrls,
+    kv: c.env.KV,
     executionCtx: c.executionCtx,
     session: c.get("session"),
     isAuthenticated: c.get("isAuthenticated")
