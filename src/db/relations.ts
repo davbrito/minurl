@@ -6,15 +6,10 @@ export const relations = defineRelations(schema, (t) => ({
     analytics: t.many.analytics()
   },
   analytics: {
-    link: t.one.links()
+    link: t.one.links({
+      from: t.analytics.slug,
+      to: t.links.slug,
+      optional: false
+    })
   }
-  // links:( ({ many }) => ({
-  //   analytics: many(analytics)
-  // }));
-  // export const analyticsRelations = relations(analytics, ({ one }) => ({
-  //   link: one(links, {
-  //     fields: [analytics.slug],
-  //     references: [links.slug]
-  //   })
-  // }));
 }));
