@@ -131,8 +131,15 @@ export async function listLinks(
     where:
       createdAtCursor && slugCursor
         ? {
-            RAW: (link, { eq, lt, sql, and }) =>
-              sql`${lt(link.createdAt, createdAtCursor)} OR (${and(eq(link.createdAt, createdAtCursor), lt(link.slug, slugCursor))})`
+            OR: [
+              { createdAt: { lt: createdAtCursor } },
+              {
+                AND: [
+                  { createdAt: { eq: createdAtCursor } },
+                  { slug: { lt: slugCursor } }
+                ]
+              }
+            ]
           }
         : undefined,
     orderBy: (link, { desc }) => [desc(link.createdAt), desc(link.slug)],
