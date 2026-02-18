@@ -1,12 +1,12 @@
+import { listLinks } from "@features/shortener/links";
 import { serverContext } from "lib/contexts";
-import { getUrlKey, type UrlMetadata } from "@features/shortener";
 import Inspect from "../components/inspect";
 import type { Route } from "./+types/_internal";
 
 const DEFAULT_PAGE_SIZE = 10;
 
 export async function loader({ context, request }: Route.LoaderArgs) {
-  const { kv, isAuthenticated, session } = context.get(serverContext);
+  const { isAuthenticated, session } = context.get(serverContext);
 
   if (!isAuthenticated) {
     throw new Response("Unauthorized", { status: 401 });
@@ -19,11 +19,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
   limit = Math.min(limit, 50); // Max limit of 50
   const cursor = searchParams.get("cursor") || undefined;
 
-  const keys = await kv.list<UrlMetadata>({
-    cursor,
-    limit,
-    prefix: getUrlKey()
-  });
+  const { links, nextCursor } = await listLinks(context, cursor, limit);
 
   let prevCursors = session.get("prevCursors") || [];
 
@@ -42,15 +38,10 @@ export async function loader({ context, request }: Route.LoaderArgs) {
   }
 
   return {
-    urls: keys.keys.map((key) => ({
-      id: key.metadata!.id,
-      visits: key.metadata!.visits ?? 0,
-      url: key.name.replace(getUrlKey(), "")
-    })),
-
+    links,
     prevCursor,
     cursor,
-    nextCursor: keys.list_complete ? undefined : keys.cursor,
+    nextCursor,
     baseUrl: url.origin
   };
 }
@@ -58,7 +49,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
 export default function Internal({ loaderData }: Route.ComponentProps) {
   return (
     <Inspect
-      urls={loaderData.urls}
+      links={loaderData.links}
       nextCursor={loaderData.nextCursor}
       cursor={loaderData.cursor}
       prevCursor={loaderData.prevCursor}

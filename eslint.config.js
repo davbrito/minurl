@@ -1,12 +1,19 @@
 // @ts-check
 import js from "@eslint/js";
 import pluginReact from "eslint-plugin-react";
+import { defineConfig } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-export default tseslint.config([
+export default defineConfig([
   {
-    ignores: ["node_modules/", "dist/", "build/", "worker-configuration.d.ts"]
+    ignores: [
+      "node_modules/",
+      "dist/",
+      "build/",
+      "worker-configuration.d.ts",
+      ".react-router"
+    ]
   },
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],

@@ -1,25 +1,29 @@
+import { getMinifiedPath, getPreviewPath } from "@features/shortener/helpers";
+import { createLink, listLinksBySlugs } from "@features/shortener/links";
 import { serverContext } from "lib/contexts";
-import { shortenUrl } from "lib/services/shortener";
 import { Form, redirect } from "react-router";
 import CreatedUrls from "src/components/created-urls";
 import MinifyUrlForm from "src/components/minify-url-form";
-import { getPreviewPath, getUrls } from "@features/shortener";
 import type { Route } from "./+types/home";
 
 export async function loader({ context, request }: Route.LoaderArgs) {
-  const { env, session } = context.get(serverContext);
-  const kv = env.KV;
+  const { session } = context.get(serverContext);
 
   const ids = session.get("createdUrlIds") || [];
-  const urls = await getUrls(kv, ids, new URL(request.url).origin);
+  const baseUrl = new URL(request.url).origin;
 
-  return { urls };
+  const links = await listLinksBySlugs(context, ids);
+
+  return {
+    urls: links.map((link) => ({
+      ...link,
+      id: link.slug,
+      minifiedUrl: `${baseUrl}${getMinifiedPath(link.slug)}`
+    }))
+  };
 }
 
 export async function action({ request, context }: Route.ActionArgs) {
-  const { env, session, executionCtx } = context.get(serverContext);
-  const kv = env.KV;
-
   const data = await request.formData();
 
   const urlVal = data.get("url");
@@ -31,9 +35,10 @@ export async function action({ request, context }: Route.ActionArgs) {
       formError: "Please enter a valid URL."
     };
   }
-  const result = await shortenUrl(kv, session, executionCtx, url.href);
 
-  throw redirect(getPreviewPath(result.id));
+  const result = await createLink(context, url.href);
+
+  throw redirect(getPreviewPath(result.slug));
 }
 
 function Home(props: Route.ComponentProps) {

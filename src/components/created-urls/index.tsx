@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AiOutlineDelete, AiOutlineHistory } from "react-icons/ai";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { Link } from "react-router";
-import { getPreviewPath } from "@features/shortener";
+import { getPreviewPath } from "@features/shortener/helpers";
 
 interface CreatedUrlsProps {
   urls: { id: string; url: string; minifiedUrl: string }[] | null;

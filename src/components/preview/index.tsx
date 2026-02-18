@@ -1,13 +1,13 @@
-import type { UrlWithMetadata } from "lib/services/shortener";
+import type { Link } from "@features/shortener/links";
 import { useSearchParams } from "react-router";
 
 interface PreviewProps {
   id?: string;
-  data: UrlWithMetadata | null;
-  baseUrl: string;
+  data: Link | undefined;
+  shortUrl: string;
 }
 
-function Preview({ id: propId, data, baseUrl }: PreviewProps) {
+function Preview({ id: propId, data, shortUrl }: PreviewProps) {
   const [searchParams] = useSearchParams();
 
   const id = propId || searchParams.get("id");
@@ -43,15 +43,15 @@ function Preview({ id: propId, data, baseUrl }: PreviewProps) {
       <p>
         <strong className="text-gray-700">Minified:</strong>{" "}
         <a
-          href={`/x/${data.id}`}
+          href={shortUrl}
           rel="noopener noreferrer"
           className="break-all text-blue-600 hover:underline"
         >
-          {new URL(`/x/${data.id}`, baseUrl).href}
+          {shortUrl}
         </a>
       </p>
       <p>
-        <strong className="text-gray-700">Visitas:</strong> {data.visits}
+        <strong className="text-gray-700">Visitas:</strong> {data.visitCount}
       </p>
     </div>
   );

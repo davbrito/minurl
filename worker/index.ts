@@ -1,12 +1,13 @@
+import { visitUrl } from "@features/shortener/links";
 import { env } from "cloudflare:workers";
-import { Hono } from "hono";
+import { Hono, type Context } from "hono";
 import { CookieStore, sessionMiddleware } from "hono-sessions";
 import { logger } from "hono/logger";
 import { createRequestHandler, RouterContextProvider } from "react-router";
+import { createDb } from "src/db";
 import { serverContext } from "../lib/contexts";
 import { apiKeyAuth } from "./middleware";
 import type { ServerEnv } from "./types";
-import { visitUrl } from "@features/shortener";
 
 const app = new Hono<ServerEnv>();
 
@@ -27,7 +28,7 @@ app.use(
 );
 
 app.get("/x/:id", async (ctx) => {
-  const { env, req } = ctx;
+  const { req } = ctx;
   const { id } = req.param();
 
   if (!id) {
@@ -35,13 +36,8 @@ app.get("/x/:id", async (ctx) => {
       status: 400
     });
   }
-
-  const fullUrl = await visitUrl(
-    ctx.executionCtx,
-    env.KV,
-    id,
-    req.header("referer")
-  );
+  const context = createRouterContext(ctx);
+  const fullUrl = await visitUrl(context, id, req.raw);
 
   if (fullUrl === null) {
     return ctx.text("Invalid request. Please provide a valid id in the url.", {
@@ -58,15 +54,7 @@ const requestHandler = createRequestHandler(
 );
 
 app.use("*", apiKeyAuth({ soft: true }), (c) => {
-  const context = new RouterContextProvider();
-
-  context.set(serverContext, {
-    env: c.env,
-    kv: c.env.KV,
-    executionCtx: c.executionCtx,
-    session: c.get("session"),
-    isAuthenticated: c.get("isAuthenticated")
-  });
+  const context = createRouterContext(c);
 
   return requestHandler(c.req.raw, context);
 });
@@ -74,3 +62,18 @@ app.use("*", apiKeyAuth({ soft: true }), (c) => {
 export default app;
 
 export type AppType = typeof app;
+
+function createRouterContext(c: Context<ServerEnv>) {
+  const context = new RouterContextProvider();
+
+  context.set(serverContext, {
+    env: c.env,
+    kv: c.env.KV,
+    executionCtx: c.executionCtx,
+    session: c.get("session"),
+    isAuthenticated: c.get("isAuthenticated"),
+    db: createDb(c.env.DB)
+  });
+
+  return context;
+}

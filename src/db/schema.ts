@@ -17,7 +17,7 @@ export const links = sqliteTable("links", {
   // Contador simple (Caché de conteo)
   // Incrementamos esto +1 en cada visita para no tener que hacer
   // un COUNT(*) costoso en la tabla de analytics cada vez.
-  visitCount: integer("visit_count").default(0),
+  visitCount: integer("visit_count").default(0).notNull(),
 
   // Fechas (SQLite usa unix epoch para timestamps)
   createdAt: integer("created_at", { mode: "timestamp" })

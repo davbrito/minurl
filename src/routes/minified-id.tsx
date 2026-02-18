@@ -1,27 +1,21 @@
-import { serverContext } from "lib/contexts";
-import { getUrlWithMetadata } from "lib/services/shortener";
-import { removeCreatedUrlId } from "worker/session";
-import { removeUrl } from "@features/shortener";
+import { getMinifiedPath } from "@features/shortener/helpers";
+import { deleteLink, findLink } from "@features/shortener/links";
+import { redirect } from "react-router";
 import Preview from "../components/preview";
 import type { Route } from "./+types/minified-id";
-import { redirect } from "react-router";
 
 export async function loader({ params, context, request }: Route.LoaderArgs) {
-  const { env } = context.get(serverContext);
-  const kv = env.KV;
-  const data = await getUrlWithMetadata(kv, params.id);
+  const data = await findLink(context, params.id);
   const baseUrl = new URL(request.url).origin;
-  return { id: params.id, data, baseUrl };
+  const shortUrl = new URL(getMinifiedPath(params.id), baseUrl).href;
+  return { id: params.id, data, shortUrl };
 }
 
 export async function action({ params, context, request }: Route.ActionArgs) {
-  const { env, session } = context.get(serverContext);
-  const kv = env.KV;
   const { id } = params;
 
   if (request.method === "DELETE") {
-    await removeUrl(kv, id);
-    removeCreatedUrlId(session, id);
+    await deleteLink(context, id);
 
     const referrer = request.headers.get("Referer")!;
     const referrerUrl = new URL(referrer);
@@ -38,10 +32,10 @@ export async function action({ params, context, request }: Route.ActionArgs) {
 }
 
 export default function Minified({ loaderData }: Route.ComponentProps) {
-  const { id, data, baseUrl } = loaderData;
+  const { id, data, shortUrl } = loaderData;
   return (
     <div className="grow p-6">
-      <Preview id={id} data={data} baseUrl={baseUrl} />
+      <Preview id={id} data={data} shortUrl={shortUrl} />
     </div>
   );
 }

@@ -1,12 +1,12 @@
-import type { UrlWithMetadata } from "lib/services/shortener";
+import { getMinifiedPath, getPreviewPath } from "@features/shortener/helpers";
+import type { Link as LinkType } from "@features/shortener/links";
 import { FaExternalLinkAlt, FaEye, FaList } from "react-icons/fa";
 import { Form, Link } from "react-router";
-import { getMinifiedPath, getPreviewPath } from "@features/shortener";
 import RemoveButton from "../remove-button";
 
 interface InspectProps {
   baseUrl: string;
-  urls: UrlWithMetadata[];
+  links: LinkType[];
   prevCursor?: string;
   cursor?: string;
   nextCursor?: string;
@@ -14,7 +14,7 @@ interface InspectProps {
 
 function Inspect({
   baseUrl,
-  urls,
+  links,
   prevCursor,
   nextCursor,
   cursor
@@ -25,11 +25,11 @@ function Inspect({
         <FaList className="inline text-sm" /> Minified URLs
       </h1>
       <ul className="grow">
-        {urls.map((url) => {
-          const minifiedUrl = getMinifiedPath(url.id);
+        {links.map((url) => {
+          const minifiedUrl = getMinifiedPath(url.slug);
           return (
             <li
-              key={url.id}
+              key={url.slug}
               className="flex flex-row items-center p-3 odd:bg-zinc-100 even:bg-zinc-50"
             >
               <div className="flex grow flex-col gap-1">
@@ -42,13 +42,13 @@ function Inspect({
                   {minifiedUrl}
                 </pre>
                 <span className="text-sm text-slate-500">
-                  Visitas: {url.visits ?? 0}
+                  Visitas: {url.visitCount}
                 </span>
               </div>
 
               <Link
                 viewTransition
-                to={getPreviewPath(url.id)}
+                to={getPreviewPath(url.slug)}
                 title="Ver"
                 type="button"
                 className={
@@ -59,7 +59,7 @@ function Inspect({
               </Link>
               <Form
                 method="delete"
-                action={`/minified/${url.id}`}
+                action={`/minified/${url.slug}`}
                 className="contents"
                 unstable_defaultShouldRevalidate
               >
