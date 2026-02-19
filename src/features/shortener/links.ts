@@ -250,3 +250,23 @@ export async function listLinksBySession(
 
   return await db.query.links.findMany({ where: { sessionId: session.id } });
 }
+
+export async function claimAnonymousLinks(
+  context: Readonly<RouterContextProvider>,
+  userId: string
+) {
+  const { db, session } = context.get(serverContext);
+
+  if (!userId || !session.id) return;
+
+  // Actualizar todos los links que tengan MI session_id pero NO tengan user_id
+  await db
+    .update(links)
+    .set({ userId, sessionId: null })
+    .where(
+      and(
+        eq(links.sessionId, session.id),
+        isNull(links.userId) // Importar isNull de drizzle-orm
+      )
+    );
+}
