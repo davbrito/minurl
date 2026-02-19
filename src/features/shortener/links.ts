@@ -5,6 +5,14 @@ import type { RouterContextProvider } from "react-router";
 import { UAParser } from "ua-parser-js";
 import { generateSlug, getSlugToUrlKey } from "./helpers";
 
+function cacheUrl(kv: KVNamespace, slug: string, url: string) {
+  return kv.put(getSlugToUrlKey(slug), url);
+}
+
+function getCachedUrl(kv: KVNamespace, slug: string) {
+  return kv.get(getSlugToUrlKey(slug));
+}
+
 export async function createLink(
   context: Readonly<RouterContextProvider>,
   url: string,
@@ -25,7 +33,7 @@ export async function createLink(
     .values({ slug, url, description, sessionId })
     .returning();
 
-  await kv.put(getSlugToUrlKey(slug), url);
+  await cacheUrl(kv, slug, url);
 
   return result[0];
 }
@@ -72,13 +80,37 @@ export async function visitUrl(
   request: Request
 ) {
   const { kv, executionCtx } = context.get(serverContext);
-  const url = await kv.get(getSlugToUrlKey(slug));
-  if (url === null) return null;
+  let url = await getCachedUrl(kv, slug);
+
+  if (!url) {
+    url = await fallbackVisitUrl(context, slug);
+  }
+
+  if (!url) return null;
 
   // NO hacemos await aquí. Usamos waitUntil para no bloquear al usuario.
   executionCtx.waitUntil(addVisit(context, slug, request));
 
   return url;
+}
+
+async function fallbackVisitUrl(
+  context: Readonly<RouterContextProvider>,
+  slug: string
+) {
+  const { db, kv } = context.get(serverContext);
+
+  const link = await db.query.links.findFirst({
+    where: { slug },
+    columns: { url: true }
+  });
+
+  if (!link) return null;
+
+  // Cache the URL for future requests
+  await cacheUrl(kv, slug, link.url);
+
+  return link.url;
 }
 
 export async function addVisit(
