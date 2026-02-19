@@ -1,5 +1,4 @@
 import Header from "../header";
-import styles from "./styles.module.css";
 
 function AppLayout({
   children,
@@ -9,7 +8,7 @@ function AppLayout({
   isAuthenticated: boolean;
 }) {
   return (
-    <main className={styles.root}>
+    <main className="mx-auto flex min-h-full max-w-5xl flex-col bg-white">
       <Header isAuthenticated={isAuthenticated} />
       {children}
       <footer className="border-t border-zinc-200/50 bg-zinc-50 p-2 text-center inset-shadow-sm">
