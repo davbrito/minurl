@@ -1,7 +1,7 @@
-import { eq, sql } from "drizzle-orm";
 import { serverContext } from "@core/contexts";
-import type { RouterContextProvider } from "react-router";
 import { analytics, links } from "@core/db/schema";
+import { and, asc, desc, eq, gt, isNull, lt, or, sql } from "drizzle-orm";
+import type { RouterContextProvider } from "react-router";
 import { UAParser } from "ua-parser-js";
 import { generateSlug, getSlugToUrlKey } from "./helpers";
 
@@ -49,6 +49,21 @@ export interface PaginationMetadata {
   endCursor?: string;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
+}
+
+function parseCursor(
+  cursor: string | undefined
+): { createdAt: Date; slug: string } | undefined {
+  if (!cursor) return undefined;
+  const idx = cursor.indexOf("/");
+  if (idx === -1) throw new Error("Invalid cursor: missing separator");
+  const datePart = cursor.slice(0, idx);
+  const slugPart = cursor.slice(idx + 1);
+  const createdAt = new Date(datePart);
+  if (Number.isNaN(createdAt.getTime()))
+    throw new Error("Invalid cursor: invalid date");
+  if (!slugPart) throw new Error("Invalid cursor: missing slug");
+  return { createdAt, slug: slugPart };
 }
 
 export async function visitUrl(
@@ -127,65 +142,51 @@ export async function listLinks(
   const after = params?.after;
   const before = params?.before;
 
-  const partsAfter = after ? (after.split("/") as [string, string]) : undefined;
-  const afterCreated = partsAfter ? new Date(partsAfter[0]) : undefined;
-  const afterSlug = partsAfter ? partsAfter[1] : undefined;
+  const afterCursor = parseCursor(after);
+  const beforeCursor = parseCursor(before);
 
-  const partsBefore = before
-    ? (before.split("/") as [string, string])
-    : undefined;
-  const beforeCreated = partsBefore ? new Date(partsBefore[0]) : undefined;
-  const beforeSlug = partsBefore ? partsBefore[1] : undefined;
+  const where = beforeCursor
+    ? // Fetch items newer than the start cursor, then reverse to keep descending order
+      or(
+        gt(links.createdAt, beforeCursor.createdAt),
+        and(
+          eq(links.createdAt, beforeCursor.createdAt),
+          gt(links.slug, beforeCursor.slug)
+        )
+      )
+    : // Fetch items older than the end cursor
+      afterCursor
+      ? or(
+          lt(links.createdAt, afterCursor.createdAt),
+          and(
+            eq(links.createdAt, afterCursor.createdAt),
+            lt(links.slug, afterCursor.slug)
+          )
+        )
+      : // First page
+        undefined;
 
-  let rows: Link[] = [];
+  const rows: Link[] = await db
+    .select()
+    .from(links)
+    .where(where)
+    .orderBy((links) =>
+      before
+        ? [asc(links.createdAt), asc(links.slug)]
+        : [desc(links.createdAt), desc(links.slug)]
+    )
+    .limit(limit + 1);
 
   if (before) {
-    // Fetch items newer than the start cursor, then reverse to keep descending order
-    rows = await db.query.links.findMany({
-      where: {
-        OR: [
-          { createdAt: { gt: beforeCreated } },
-          {
-            AND: [
-              { createdAt: { eq: beforeCreated } },
-              { slug: { gt: beforeSlug } }
-            ]
-          }
-        ]
-      },
-      orderBy: (link, { asc }) => [asc(link.createdAt), asc(link.slug)],
-      limit: limit + 1
-    });
-
     // rows are ascending; reverse to descending for client
-    rows = rows.reverse();
-  } else if (after) {
-    // Fetch items older than the end cursor
-    rows = await db.query.links.findMany({
-      where: {
-        OR: [
-          { createdAt: { lt: afterCreated } },
-          {
-            AND: [
-              { createdAt: { eq: afterCreated } },
-              { slug: { lt: afterSlug } }
-            ]
-          }
-        ]
-      },
-      orderBy: (link, { desc }) => [desc(link.createdAt), desc(link.slug)],
-      limit: limit + 1
-    });
-  } else {
-    // First page
-    rows = await db.query.links.findMany({
-      orderBy: (link, { desc }) => [desc(link.createdAt), desc(link.slug)],
-      limit: limit + 1
-    });
+    rows.reverse();
   }
 
   const hasMore = rows.length > limit;
-  if (hasMore) rows = rows.slice(0, limit);
+  if (hasMore) {
+    if (before) rows.shift();
+    else rows.pop();
+  }
 
   const start = rows[0];
   const end = rows[rows.length - 1];
@@ -197,42 +198,23 @@ export async function listLinks(
     ? `${end.createdAt.toISOString()}/${end.slug}`
     : undefined;
 
-  // compute has_previous_page (are there items newer than start?)
-  let hasPreviousPage = false;
-  if (start) {
-    const exists = await db.query.links.findFirst({
-      where: {
-        OR: [
-          { createdAt: { gt: start.createdAt } },
-          {
-            AND: [
-              { createdAt: { eq: start.createdAt } },
-              { slug: { gt: start.slug } }
-            ]
-          }
-        ]
-      }
-    });
-    hasPreviousPage = !!exists;
-  }
+  // Determine pagination flags from fetched rows and request direction to avoid extra queries.
 
-  // compute has_next_page (are there items older than end?)
+  let hasPreviousPage = false;
   let hasNextPage = false;
-  if (end) {
-    const exists = await db.query.links.findFirst({
-      where: {
-        OR: [
-          { createdAt: { lt: end.createdAt } },
-          {
-            AND: [
-              { createdAt: { eq: end.createdAt } },
-              { slug: { lt: end.slug } }
-            ]
-          }
-        ]
-      }
-    });
-    hasNextPage = !!exists;
+
+  if (before) {
+    // We fetched newer items than `before`. There is a next page (the page containing `before`).
+    hasNextPage = true;
+    hasPreviousPage = hasMore;
+  } else if (after) {
+    // We fetched older items than `after`. There is a previous page (the page containing `after`).
+    hasPreviousPage = true;
+    hasNextPage = hasMore;
+  } else {
+    // First page
+    hasPreviousPage = false;
+    hasNextPage = hasMore;
   }
 
   return {
