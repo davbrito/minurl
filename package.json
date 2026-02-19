@@ -46,6 +46,7 @@
     "wrangler": "^4.66.0"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.3.0",
     "@fontsource-variable/roboto-flex": "^5.2.8",
     "@hono/session": "^0.2.0",
     "@hono/zod-validator": "^0.7.6",
