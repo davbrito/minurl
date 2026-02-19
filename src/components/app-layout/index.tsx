@@ -14,9 +14,6 @@ function AppLayout({
       <footer className="border-t border-slate-200 bg-white px-4 py-4 text-sm text-slate-600 sm:px-8">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-3 sm:flex-row">
           <div className="flex items-center gap-2 font-semibold text-slate-900">
-            <span className="grid size-5 place-items-center rounded bg-blue-600 text-[10px] text-white">
-              ⛓
-            </span>
             <img
               src="/favicon-32x32.png"
               alt="minurl logo"
