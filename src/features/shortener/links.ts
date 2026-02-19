@@ -270,13 +270,17 @@ export async function listLinks(
 }
 
 export async function listLinksBySession(
-  context: Readonly<RouterContextProvider>
+  context: Readonly<RouterContextProvider>,
+  limit = 100
 ): Promise<Link[]> {
   const { db, session } = context.get(serverContext);
 
   if (!session.id) return [];
 
-  return await db.query.links.findMany({ where: { sessionId: session.id } });
+  return await db.query.links.findMany({
+    where: { sessionId: session.id },
+    limit
+  });
 }
 
 export async function claimAnonymousLinks(

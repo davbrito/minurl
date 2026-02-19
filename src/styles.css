@@ -18,8 +18,8 @@ body {
 }
 
 body {
-  color: var(--color-secondary);
-  background-color: hsl(258, 23%, 80%);
+  color: hsl(222 47% 11%);
+  background-color: hsl(220 23% 96%);
 }
 
 :where(button, [role="button"]) {
