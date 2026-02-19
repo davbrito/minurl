@@ -1,17 +1,13 @@
 import type { Link } from "@features/shortener/links";
-import { useSearchParams } from "react-router";
 
 interface PreviewProps {
   id?: string;
   data: Link | undefined;
+  analytics?: any[];
   shortUrl: string;
 }
 
-function Preview({ id: propId, data, shortUrl }: PreviewProps) {
-  const [searchParams] = useSearchParams();
-
-  const id = propId || searchParams.get("id");
-
+function Preview({ id, data, shortUrl, analytics }: PreviewProps) {
   if (!id) {
     return (
       <div className="mx-auto max-w-xl rounded-lg border border-red-200 bg-red-50 p-6 text-red-700 shadow">
@@ -53,6 +49,48 @@ function Preview({ id: propId, data, shortUrl }: PreviewProps) {
       <p>
         <strong className="text-gray-700">Visitas:</strong> {data.visitCount}
       </p>
+
+      <div className="mt-4">
+        <h3 className="text-sm font-semibold text-gray-700">Analíticas</h3>
+        {analytics && analytics.length > 0 ? (
+          <div className="mt-2 overflow-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs text-gray-500">
+                  <th className="pb-1">Hora</th>
+                  <th className="pb-1">País</th>
+                  <th className="pb-1">Ciudad</th>
+                  <th className="pb-1">Dispositivo</th>
+                  <th className="pb-1">Navegador</th>
+                  <th className="pb-1">Referer</th>
+                </tr>
+              </thead>
+              <tbody>
+                {analytics.map((a: any) => (
+                  <tr key={a.id} className="border-t">
+                    <td className="py-1 text-gray-600">
+                      {a.timestamp
+                        ? new Date(a.timestamp).toLocaleString()
+                        : "—"}
+                    </td>
+                    <td className="py-1 text-gray-600">{a.country ?? "—"}</td>
+                    <td className="py-1 text-gray-600">{a.city ?? "—"}</td>
+                    <td className="py-1 text-gray-600">{a.device ?? "—"}</td>
+                    <td className="py-1 text-gray-600">{a.browser ?? "—"}</td>
+                    <td className="py-1 break-all text-gray-600">
+                      {a.referer ?? "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-sm text-gray-500">
+            No hay datos de analíticas.
+          </div>
+        )}
+      </div>
     </div>
   );
 }

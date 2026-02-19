@@ -50,6 +50,20 @@ export async function findLink(
   return link;
 }
 
+export async function getAnalyticsForLink(
+  context: Readonly<RouterContextProvider>,
+  slug: string,
+  limit = 10
+) {
+  const { db } = context.get(serverContext);
+
+  return await db.query.analytics.findMany({
+    where: { slug },
+    orderBy: (a) => [desc(a.timestamp)],
+    limit
+  });
+}
+
 export type Link = typeof links.$inferSelect;
 
 export interface PaginationMetadata {

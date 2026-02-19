@@ -5,7 +5,15 @@ import { Link } from "react-router";
 import { getPreviewPath } from "@features/shortener/helpers";
 
 interface CreatedUrlsProps {
-  urls: { id: string; url: string; minifiedUrl: string }[] | null;
+  urls:
+    | {
+        id: string;
+        url: string;
+        minifiedUrl: string;
+        createdAt?: string | number | Date | null;
+        lastClickedAt?: string | number | Date | null;
+      }[]
+    | null;
 }
 
 function CreatedUrls({ urls }: CreatedUrlsProps) {
@@ -53,6 +61,20 @@ function CreatedUrls({ urls }: CreatedUrlsProps) {
                 </Link>
                 <div className="truncate text-xs text-gray-500">
                   {item.minifiedUrl}
+                </div>
+                <div className="mt-1 flex gap-2 text-xs text-gray-400">
+                  <div>
+                    Creado:{" "}
+                    {item.createdAt
+                      ? new Date(item.createdAt).toLocaleString()
+                      : "—"}
+                  </div>
+                  <div>
+                    Último click:{" "}
+                    {item.lastClickedAt
+                      ? new Date(item.lastClickedAt).toLocaleString()
+                      : "—"}
+                  </div>
                 </div>
               </div>
               <button

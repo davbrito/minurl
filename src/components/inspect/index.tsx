@@ -39,6 +39,20 @@ function Inspect({ baseUrl, links, pagination }: InspectProps) {
                 <span className="text-sm text-slate-500">
                   Visitas: {url.visitCount}
                 </span>
+                <div className="text-sm text-slate-400">
+                  <div>
+                    Creado:{" "}
+                    {url.createdAt
+                      ? new Date(url.createdAt).toLocaleString()
+                      : "—"}
+                  </div>
+                  <div>
+                    Último click:{" "}
+                    {url.lastClickedAt
+                      ? new Date(url.lastClickedAt).toLocaleString()
+                      : "—"}
+                  </div>
+                </div>
               </div>
 
               <Link
