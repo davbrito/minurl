@@ -21,7 +21,7 @@ importers:
         version: 10.3.0
       '@fontsource-variable/roboto-flex':
         specifier: ^5.2.8
-        version: 5.2.8
+        version: 5.3.0
       '@hono/session':
         specifier: ^0.2.0
         version: 0.2.0(hono@4.12.34)
@@ -597,8 +597,8 @@ packages:
     resolution: {integrity: sha512-It0Sne6P3szg7JIi6CgKbvTZoMjxBZhcv91ZrqrNuaZQfB5WoqYYbzCUOq89YR+VY8juY9M1vDWmDDa2TzfXCw==}
     engines: {node: ^20.19.0 || ^22.13.0 || ^23.5.0 || >=24.0.0, npm: '>=10'}
 
-  '@fontsource-variable/roboto-flex@5.2.8':
-    resolution: {integrity: sha512-Q9zbz+P2VrDeIxBu9YAIG+eYpLmQF5FIJEEwAWn8En9Lao1TOISnoYcywGV+jSv7LGsHEndCR8hveXPnvCBEQQ==}
+  '@fontsource-variable/roboto-flex@5.3.0':
+    resolution: {integrity: sha512-bOxckUy0qXNRjhV6e4pcHGSvptix4ZRD1uaj5Za8h+p3qrb2GL4U4TQdpVmPSy0SmqwldfD+JJqEKdF68EyiAw==}
 
   '@hono/session@0.2.0':
     resolution: {integrity: sha512-tn9OVxZb7PiQXwDFu4nSju9Mcjy0NP3ozrdGM/41YKTubW9kfjnBaib1kpygyU1lCuScP6PjCQ0AEfSDyEnr6A==}
@@ -3700,7 +3700,7 @@ snapshots:
 
   '@faker-js/faker@10.3.0': {}
 
-  '@fontsource-variable/roboto-flex@5.2.8': {}
+  '@fontsource-variable/roboto-flex@5.3.0': {}
 
   '@hono/session@0.2.0(hono@4.12.34)':
     dependencies:
