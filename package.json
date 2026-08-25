@@ -9,7 +9,9 @@
     "dev:wrangler": "wrangler dev pages ./dist --port 8788",
     "build": "react-router build",
     "preview": "react-router preview",
-    "typegen": "wrangler types"
+    "typegen": "wrangler types",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
