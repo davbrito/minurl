@@ -10,12 +10,40 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      npm-security:
+      npm-security-patch:
         applies-to: security-updates
+        update-types:
+          - "patch"
         patterns:
           - "*"
-      npm-dependencies:
+      npm-security-minor:
+        applies-to: security-updates
+        update-types:
+          - "minor"
+        patterns:
+          - "*"
+      npm-security-major:
+        applies-to: security-updates
+        update-types:
+          - "major"
+        patterns:
+          - "*"
+      npm-patch:
         applies-to: version-updates
+        update-types:
+          - "patch"
+        patterns:
+          - "*"
+      npm-minor:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+        patterns:
+          - "*"
+      npm-major:
+        applies-to: version-updates
+        update-types:
+          - "major"
         patterns:
           - "*"
     open-pull-requests-limit: 10
