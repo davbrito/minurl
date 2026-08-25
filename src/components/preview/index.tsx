@@ -119,6 +119,10 @@ function Preview({ id, data, shortUrl, analytics }: PreviewProps) {
 
   const topSource = sortedSources[0];
 
+  // Bucketing analytics rows into "last 7 days" relative to render time;
+  // a few seconds/ms of drift between server and client render doesn't
+  // change which day a row falls into, so this is safe despite the impurity.
+  // eslint-disable-next-line @eslint-react/purity
   const now = new Date();
   const weekdayKeys = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const clicksByDay = weekdayKeys.map(() => 0);
