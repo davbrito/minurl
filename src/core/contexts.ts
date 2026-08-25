@@ -14,4 +14,7 @@ export interface ServerContext {
   hono: HonoContext<ServerEnv>;
 }
 
+// react-router's createContext is a router context, not a React UI context;
+// @eslint-react's naming convention rule assumes the latter.
+// eslint-disable-next-line @eslint-react/naming-convention-context-name
 export const serverContext = createContext<ServerContext>();

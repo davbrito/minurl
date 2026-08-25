@@ -1,5 +1,7 @@
 import Header from "../header";
 
+const currentYear = new Date().getFullYear();
+
 function AppLayout({
   children,
   isAuthenticated
@@ -23,7 +25,7 @@ function AppLayout({
           </div>
           <div className="text-center text-xs text-slate-500 sm:text-right">
             <div className="text-xs text-slate-500">
-              © {new Date().getFullYear()} David Brito. All rights reserved.
+              © {currentYear} David Brito. All rights reserved.
             </div>
             <div className="">
               Made with {"❤️"} by{" "}
