@@ -246,8 +246,8 @@ export async function listLinks(
 
   // Determine pagination flags from fetched rows and request direction to avoid extra queries.
 
-  let hasPreviousPage = false;
-  let hasNextPage = false;
+  let hasPreviousPage: boolean;
+  let hasNextPage: boolean;
 
   if (before) {
     // We fetched newer items than `before`. There is a next page (the page containing `before`).

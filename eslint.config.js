@@ -1,7 +1,8 @@
 // @ts-check
 import js from "@eslint/js";
-import pluginReact from "eslint-plugin-react";
+import eslintReact from "@eslint-react/eslint-plugin";
 import { defineConfig } from "eslint/config";
+import pluginReactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -33,22 +34,24 @@ export default defineConfig([
     languageOptions: { globals: { ...globals.node } }
   },
   tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
-  pluginReact.configs.flat["jsx-runtime"],
+  eslintReact.configs["recommended-typescript"],
+  pluginReactHooks.configs.flat["recommended-latest"],
   {
     rules: {
       "@typescript-eslint/no-explicit-any": 0,
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }
-      ],
-      "react/prop-types": 0,
-      "react/jsx-no-leaked-render": 2
-    },
-    settings: {
-      react: {
-        version: "detect"
-      }
+      ]
+    }
+  },
+  {
+    // worker/index.ts imports @hono/session's useSession/useSessionStorage,
+    // which look like React hooks by name but aren't - disable hook rules there.
+    files: ["worker/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    rules: {
+      "@eslint-react/rules-of-hooks": 0,
+      "react-hooks/rules-of-hooks": 0
     }
   }
 ]);
