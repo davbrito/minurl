@@ -24,10 +24,10 @@ importers:
         version: 5.3.0
       '@hono/session':
         specifier: ^0.2.0
-        version: 0.2.1(hono@4.13.7)
+        version: 0.2.1(hono@4.13.8)
       '@hono/zod-validator':
         specifier: ^0.9.0
-        version: 0.9.1(hono@4.13.7)(zod@4.4.3)
+        version: 0.9.1(hono@4.13.8)(zod@4.4.3)
       '@tailwindcss/vite':
         specifier: ^4.3.1
         version: 4.3.3(vite@8.2.2(@types/node@24.12.0)(esbuild@0.28.1)(jiti@2.7.0))
@@ -39,7 +39,7 @@ importers:
         version: 1.0.0-rc.3(@types/better-sqlite3@7.6.13)(@types/mssql@9.1.9(supports-color@10.2.2))(mssql@11.0.1(supports-color@10.2.2))(valibot@1.4.2(typescript@6.0.3))(zod@4.4.3)
       hono:
         specifier: ^4.12.25
-        version: 4.13.7
+        version: 4.13.8
       isbot:
         specifier: ^5.1.42
         version: 5.2.2
@@ -57,7 +57,7 @@ importers:
         version: 19.2.8(react@19.2.8)
       react-hot-toast:
         specifier: ^2.6.0
-        version: 2.6.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 2.6.1(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-icons:
         specifier: ^5.6.0
         version: 5.7.0(react@19.2.8)
@@ -112,13 +112,13 @@ importers:
         version: 17.11.0
       prettier:
         specifier: ^3.8.4
-        version: 3.9.6
+        version: 3.9.8
       prettier-plugin-jsdoc:
         specifier: 1.8.1
-        version: 1.8.1(prettier@3.9.6)(supports-color@10.2.2)
+        version: 1.8.1(prettier@3.9.8)(supports-color@10.2.2)
       prettier-plugin-tailwindcss:
         specifier: 0.8.1
-        version: 0.8.1(prettier-plugin-jsdoc@1.8.1(prettier@3.9.6)(supports-color@10.2.2))(prettier@3.9.6)
+        version: 0.8.1(prettier-plugin-jsdoc@1.8.1(prettier@3.9.8)(supports-color@10.2.2))(prettier@3.9.8)
       typescript:
         specifier: '6'
         version: 6.0.3
@@ -1928,8 +1928,8 @@ packages:
   hermes-parser@0.25.1:
     resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
 
-  hono@4.13.7:
-    resolution: {integrity: sha512-c8/gF9ac8Y78/agExVocyLevgR+JlpNB444Py0FSX8pJoPdYUfUzRcXtYEYGwt6l19qIlVZPN5Mfsw9jFShmQQ==}
+  hono@4.13.8:
+    resolution: {integrity: sha512-/Gng7NfoykZl2pjukW5Z6+8Yxm3BPRf86GTbQnt0SbySkvax4fyL4H3HhY1cCpBGmiW9XDRFzRV+CXK2W8QudQ==}
     engines: {node: '>=16.9.0'}
 
   http-proxy-agent@7.0.2:
@@ -2466,8 +2466,8 @@ packages:
       prettier-plugin-svelte:
         optional: true
 
-  prettier@3.9.6:
-    resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
+  prettier@3.9.8:
+    resolution: {integrity: sha512-WRFq3Wn3WId7LLROfMLdH7xaFr2jR62wU8nLO6rQUOLOxNZUviyJQs1M0iIhLexSFy+L+w0ch66wtoO2jRjG0A==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -2484,12 +2484,19 @@ packages:
     peerDependencies:
       react: ^19.2.8
 
-  react-hot-toast@2.6.0:
-    resolution: {integrity: sha512-bH+2EBMZ4sdyou/DPrfgIouFpcRLCJ+HoCA32UoAYHn6T3Ur5yfcDCeSr5mwldl6pFOsiocmrXMuoCJ1vV8bWg==}
+  react-hot-toast@2.6.1:
+    resolution: {integrity: sha512-gjFsf05dxcku0FkyMtFH+XmYFdA2odXfBVknEr/IZ+XpUjwsgvtY2616sOpUynK+l9ykQDRNpaJ1hYfuximUiA==}
     engines: {node: '>=10'}
     peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
       react: '>=16'
       react-dom: '>=16'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
 
   react-icons@5.7.0:
     resolution: {integrity: sha512-LBLy340Rzqy6+/yVhZKT3B/QpP1BZaesGqasf09HPOBzRarcDIFH0WwXlXQfE7q7ipxK4MSiC5DIBWURCny6fw==}
@@ -3411,14 +3418,14 @@ snapshots:
 
   '@fontsource-variable/roboto-flex@5.3.0': {}
 
-  '@hono/session@0.2.1(hono@4.13.7)':
+  '@hono/session@0.2.1(hono@4.13.8)':
     dependencies:
-      hono: 4.13.7
+      hono: 4.13.8
       jose: 6.2.10
 
-  '@hono/zod-validator@0.9.1(hono@4.13.7)(zod@4.4.3)':
+  '@hono/zod-validator@0.9.1(hono@4.13.8)(zod@4.4.3)':
     dependencies:
-      hono: 4.13.7
+      hono: 4.13.8
       zod: 4.4.3
 
   '@humanfs/core@0.19.1': {}
@@ -4522,7 +4529,7 @@ snapshots:
     dependencies:
       hermes-estree: 0.25.1
 
-  hono@4.13.7: {}
+  hono@4.13.8: {}
 
   http-proxy-agent@7.0.2(supports-color@10.2.2):
     dependencies:
@@ -5046,22 +5053,22 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-jsdoc@1.8.1(prettier@3.9.6)(supports-color@10.2.2):
+  prettier-plugin-jsdoc@1.8.1(prettier@3.9.8)(supports-color@10.2.2):
     dependencies:
       binary-searching: 2.0.5
       comment-parser: 1.4.8
       mdast-util-from-markdown: 2.0.3(supports-color@10.2.2)
-      prettier: 3.9.6
+      prettier: 3.9.8
     transitivePeerDependencies:
       - supports-color
 
-  prettier-plugin-tailwindcss@0.8.1(prettier-plugin-jsdoc@1.8.1(prettier@3.9.6)(supports-color@10.2.2))(prettier@3.9.6):
+  prettier-plugin-tailwindcss@0.8.1(prettier-plugin-jsdoc@1.8.1(prettier@3.9.8)(supports-color@10.2.2))(prettier@3.9.8):
     dependencies:
-      prettier: 3.9.6
+      prettier: 3.9.8
     optionalDependencies:
-      prettier-plugin-jsdoc: 1.8.1(prettier@3.9.6)(supports-color@10.2.2)
+      prettier-plugin-jsdoc: 1.8.1(prettier@3.9.8)(supports-color@10.2.2)
 
-  prettier@3.9.6: {}
+  prettier@3.9.8: {}
 
   process@0.11.10:
     optional: true
@@ -5073,12 +5080,15 @@ snapshots:
       react: 19.2.8
       scheduler: 0.27.0
 
-  react-hot-toast@2.6.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  react-hot-toast@2.6.1(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       csstype: 3.2.3
       goober: 2.1.18(csstype@3.2.3)
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
+    optionalDependencies:
+      '@types/react': 19.2.18
+      '@types/react-dom': 19.2.5(@types/react@19.2.18)
 
   react-icons@5.7.0(react@19.2.8):
     dependencies:
